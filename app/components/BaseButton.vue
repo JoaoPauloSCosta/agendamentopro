@@ -29,9 +29,14 @@
       ></path>
     </svg>
 
-    <!-- Icon Left -->
+    <!-- Icon Left Slot -->
+    <span v-if="$slots.iconLeft && !loading" class="mr-2">
+      <slot name="iconLeft" />
+    </span>
+
+    <!-- Icon Left Prop -->
     <component
-      v-if="iconLeft && !loading"
+      v-else-if="iconLeft && !loading"
       :is="iconLeft"
       class="w-4 h-4 mr-2"
     />
@@ -39,9 +44,14 @@
     <!-- Slot Content -->
     <slot>{{ label }}</slot>
 
-    <!-- Icon Right -->
+    <!-- Icon Right Slot -->
+    <span v-if="$slots.iconRight && !loading" class="ml-2">
+      <slot name="iconRight" />
+    </span>
+
+    <!-- Icon Right Prop -->
     <component
-      v-if="iconRight && !loading"
+      v-else-if="iconRight && !loading"
       :is="iconRight"
       class="w-4 h-4 ml-2"
     />
@@ -63,9 +73,9 @@ interface Props {
   /** Estado de carregamento */
   loading?: boolean
   /** Ícone à esquerda */
-  iconLeft?: string
+  iconLeft?: object | Function
   /** Ícone à direita */
-  iconRight?: string
+  iconRight?: object | Function
   /** Largura total */
   fullWidth?: boolean
   /** ID fixo para evitar problemas de hidratação */
@@ -90,8 +100,19 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>()
 
-// ID fixo para evitar problemas de hidratação
-const buttonId = computed(() => props.id || `btn-${Math.random().toString(36).substr(2, 9)}`)
+// ID único para o botão (usando contador para evitar problemas de hidratação)
+let buttonIdCounter = 0
+const buttonId = computed(() => {
+  if (props.id) return props.id
+  
+  // Durante a hidratação, usar um ID baseado em contador para consistência
+  if (process.client) {
+    return `btn-${++buttonIdCounter}`
+  }
+  
+  // No servidor, usar um ID simples
+  return 'btn-ssr'
+})
 
 // Classes computadas baseadas no system design
 const buttonClasses = computed(() => {
@@ -99,7 +120,6 @@ const buttonClasses = computed(() => {
     'btn',
     'inline-flex',
     'items-center',
-    'justify-center',
     'font-medium',
     'transition-all',
     'duration-200',

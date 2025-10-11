@@ -83,19 +83,28 @@
 import { ref } from 'vue'
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
 
+// Composable de autenticação
+const { login, isLoading, error } = useAuth()
+
 // Dados do formulário
 const formData = ref({
   email: '',
   password: ''
 })
 
-// Estado de loading
-const isLoading = ref(false)
+// Função de submit com autenticação real
+const handleSubmit = async () => {
+  if (!formData.value.email || !formData.value.password) {
+    return
+  }
 
-// Função de submit (apenas para demonstração)
-const handleSubmit = () => {
-  console.log('Dados do formulário:', formData.value)
-  // Aqui seria implementada a lógica de autenticação
+  const result = await login(formData.value.email, formData.value.password)
+  
+  if (!result.success) {
+    // O erro já é tratado pelo composable useAuth
+    console.error('Erro no login:', result.error)
+  }
+  // Se o login for bem-sucedido, o redirecionamento é feito automaticamente pelo composable
 }
 </script>
 

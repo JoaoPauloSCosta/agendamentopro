@@ -63,7 +63,7 @@
               <div class="flex flex-wrap gap-4 items-center">
                 <HomeIcon class="w-6 h-6 text-primary-600" />
                 <UserIcon class="w-6 h-6 text-secondary-600" />
-                <CalendarIcon class="w-6 h-6 text-success-600" />
+                <CalendarDaysIcon class="w-6 h-6 text-success-600" />
                 <ClockIcon class="w-6 h-6 text-warning-600" />
                 <HeartIcon class="w-6 h-6 text-danger-600" />
                 <StarIcon class="w-6 h-6 text-warning-500" />
@@ -373,7 +373,7 @@ import {
   InformationCircleIcon,
   HomeIcon,
   UserIcon,
-  CalendarIcon,
+  CalendarDaysIcon,
   ClockIcon,
   HeartIcon,
   StarIcon,
