@@ -1,4 +1,4 @@
-import type { AgEspecialidade, AgAddEspecialidadeResponse, AgProfissional, AgPerfil } from '~/types/database'
+import type { AgEspecialidade, AgAddEspecialidadeResponse, AgProfissional, AgPerfil, AgCliente } from '~/types/database'
 
 export const useProfissionais = () => {
   const supabase = useSupabaseClient()
@@ -333,6 +333,171 @@ export const useProfissionais = () => {
     }
   }
 
+  // Buscar clientes
+  const buscarClientes = async (): Promise<AgCliente[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('ag_clientes')
+        .select('*')
+        .order('nome')
+
+      if (error) {
+        console.error('Erro ao buscar clientes:', error)
+        throw new Error(error.message || 'Erro ao buscar clientes')
+      }
+
+      return data || []
+    } catch (error) {
+      console.error('Erro na função buscarClientes:', error)
+      throw error
+    }
+  }
+
+  // Inserir cliente
+  const inserirCliente = async (dadosCliente: {
+    nome: string
+    cpf: string
+    endereco?: string | null
+    email?: string | null
+    telefone?: string | null
+  }): Promise<AgAddEspecialidadeResponse> => {
+    try {
+      console.log('Inserindo cliente com:', dadosCliente)
+      
+      const { data, error } = await supabase
+        .from('ag_clientes')
+        .insert({
+          nome: dadosCliente.nome,
+          cpf: dadosCliente.cpf,
+          endereco: dadosCliente.endereco || null,
+          email: dadosCliente.email || null,
+          telefone: dadosCliente.telefone || null
+        })
+        .select()
+
+      console.log('Resposta do Supabase - data:', data, 'error:', error)
+
+      // Verificação de erro do Supabase
+      if (error) {
+        console.error('Erro do Supabase:', error)
+        
+        // Traduzir mensagens de erro específicas
+        let errorMessage = String(error?.message || error || 'Erro ao inserir cliente')
+        
+        // Verificar se é erro de CPF duplicado
+        if (error.code === '23505' && error.message?.includes('cpf')) {
+          errorMessage = 'CPF já cadastrado'
+        }
+        
+        return {
+          success: false,
+          message: errorMessage
+        }
+      }
+
+      return {
+        success: true,
+        message: 'Cliente inserido com sucesso!'
+      }
+    } catch (error: any) {
+      console.error('Erro na função inserirCliente:', error)
+      return {
+        success: false,
+        message: String(error?.message || 'Erro interno do sistema')
+      }
+    }
+  }
+
+  // Editar cliente
+  const editarCliente = async (clienteId: number, dadosCliente: {
+    nome: string
+    cpf: string
+    endereco?: string | null
+    email?: string | null
+    telefone?: string | null
+  }): Promise<AgAddEspecialidadeResponse> => {
+    try {
+      console.log('Editando cliente com ID:', clienteId, 'dados:', dadosCliente)
+      
+      const { data, error } = await supabase
+        .from('ag_clientes')
+        .update({
+          nome: dadosCliente.nome,
+          cpf: dadosCliente.cpf,
+          endereco: dadosCliente.endereco || null,
+          email: dadosCliente.email || null,
+          telefone: dadosCliente.telefone || null
+        })
+        .eq('id', clienteId)
+        .select()
+
+      console.log('Resposta do Supabase - data:', data, 'error:', error)
+
+      // Verificação de erro do Supabase
+      if (error) {
+        console.error('Erro do Supabase:', error)
+        
+        // Traduzir mensagens de erro específicas
+        let errorMessage = String(error?.message || error || 'Erro ao editar cliente')
+        
+        // Verificar se é erro de CPF duplicado
+        if (error.code === '23505' && error.message?.includes('cpf')) {
+          errorMessage = 'CPF já cadastrado'
+        }
+        
+        return {
+          success: false,
+          message: errorMessage
+        }
+      }
+
+      return {
+        success: true,
+        message: 'Cliente editado com sucesso!'
+      }
+    } catch (error: any) {
+      console.error('Erro na função editarCliente:', error)
+      return {
+        success: false,
+        message: String(error?.message || 'Erro interno do sistema')
+      }
+    }
+  }
+
+  // Deletar cliente
+  const deletarCliente = async (clienteId: number): Promise<AgAddEspecialidadeResponse> => {
+    try {
+      console.log('Deletando cliente com ID:', clienteId)
+      
+      const { error } = await supabase
+        .from('ag_clientes')
+        .delete()
+        .eq('id', clienteId)
+
+      console.log('Resposta do Supabase - error:', error)
+
+      // Verificação de erro do Supabase
+      if (error) {
+        console.error('Erro do Supabase:', error)
+        return {
+          success: false,
+          message: String(error?.message || error || 'Erro ao deletar cliente')
+        }
+      }
+
+      return {
+        success: true,
+        message: 'Cliente deletado com sucesso!'
+      }
+    } catch (error: any) {
+      console.error('Erro na função deletarCliente:', error)
+      return {
+        success: false,
+        message: String(error?.message || 'Erro interno do sistema')
+      }
+    }
+  }
+
   return {
     buscarProfissionais,
     buscarEspecialidades,
@@ -342,6 +507,10 @@ export const useProfissionais = () => {
     buscarPerfis,
     inserirProfissional,
     editarProfissional,
-    deletarProfissional
+    deletarProfissional,
+    buscarClientes,
+    inserirCliente,
+    editarCliente,
+    deletarCliente
   }
 }

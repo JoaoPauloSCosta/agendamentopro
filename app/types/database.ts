@@ -61,3 +61,14 @@ export interface AgPerfil {
   id: number
   nome: string
 }
+
+// Tipo para clientes
+export interface AgCliente {
+  id: number
+  created_at: string
+  cpf: string | null
+  nome: string | null
+  endereco: string | null
+  email: string | null
+  telefone: string | null
+}
