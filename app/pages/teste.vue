@@ -360,6 +360,117 @@
           </form>
         </div>
       </section>
+
+      <!-- Pagination Tests -->
+      <section class="mb-16">
+        <div class="bg-white rounded-2xl shadow-card border border-neutral-200 p-8">
+          <h2 class="text-2xl font-bold text-neutral-900 mb-6 flex items-center">
+            📄 Componente de Paginação
+            <span class="ml-3 text-sm font-normal text-neutral-500">Sistema de Navegação</span>
+          </h2>
+
+          <div class="space-y-8">
+            <!-- Controles de teste -->
+            <div class="grid md:grid-cols-3 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 mb-2">
+                  Total de Itens
+                </label>
+                <BaseInput
+                  v-model="paginationTest.totalItems"
+                  type="number"
+                  min="0"
+                  placeholder="Ex: 150"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 mb-2">
+                  Itens por Página
+                </label>
+                <BaseInput
+                  v-model="paginationTest.itemsPerPage"
+                  type="number"
+                  min="1"
+                  placeholder="Ex: 10"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 mb-2">
+                  Página Atual
+                </label>
+                <BaseInput
+                  v-model="paginationTest.currentPage"
+                  type="number"
+                  min="1"
+                  :max="Math.ceil(paginationTest.totalItems / paginationTest.itemsPerPage)"
+                  placeholder="Ex: 1"
+                />
+              </div>
+            </div>
+
+            <!-- Informações da paginação -->
+            <div class="bg-neutral-50 rounded-lg p-4">
+              <h3 class="text-lg font-semibold text-neutral-800 mb-3">Informações da Paginação</h3>
+              <div class="grid md:grid-cols-4 gap-4 text-sm">
+                <div>
+                  <span class="font-medium text-neutral-600">Total de Páginas:</span>
+                  <span class="ml-2 text-neutral-900">{{ Math.ceil(paginationTest.totalItems / paginationTest.itemsPerPage) }}</span>
+                </div>
+                <div>
+                  <span class="font-medium text-neutral-600">Página Atual:</span>
+                  <span class="ml-2 text-neutral-900">{{ paginationTest.currentPage }}</span>
+                </div>
+                <div>
+                  <span class="font-medium text-neutral-600">Itens Mostrados:</span>
+                  <span class="ml-2 text-neutral-900">
+                    {{ ((paginationTest.currentPage - 1) * paginationTest.itemsPerPage + 1) }} - 
+                    {{ Math.min(paginationTest.currentPage * paginationTest.itemsPerPage, paginationTest.totalItems) }}
+                  </span>
+                </div>
+                <div>
+                  <span class="font-medium text-neutral-600">Total de Itens:</span>
+                  <span class="ml-2 text-neutral-900">{{ paginationTest.totalItems }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Componente de paginação -->
+            <div class="border border-neutral-200 rounded-lg">
+              <BasePagination
+                :current-page="paginationTest.currentPage"
+                :total-items="paginationTest.totalItems"
+                :items-per-page="paginationTest.itemsPerPage"
+                @page-change="handlePageChange"
+              />
+            </div>
+
+            <!-- Botões de teste rápido -->
+            <div class="flex flex-wrap gap-3">
+              <BaseButton
+                variant="secondary"
+                size="sm"
+                @click="setPaginationTest(150, 10, 1)"
+              >
+                Teste: 150 itens, 10 por página
+              </BaseButton>
+              <BaseButton
+                variant="secondary"
+                size="sm"
+                @click="setPaginationTest(1000, 25, 5)"
+              >
+                Teste: 1000 itens, 25 por página
+              </BaseButton>
+              <BaseButton
+                variant="secondary"
+                size="sm"
+                @click="setPaginationTest(50, 5, 3)"
+              >
+                Teste: 50 itens, 5 por página
+              </BaseButton>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -428,6 +539,13 @@ const formErrors = reactive({
 })
 
 const formSubmitting = ref(false)
+
+// Estados do componente de paginação
+const paginationTest = reactive({
+  currentPage: 1,
+  totalItems: 150,
+  itemsPerPage: 10
+})
 
 // Métodos para Toast
 const showSuccessToast = () => {
@@ -522,9 +640,22 @@ const resetForm = () => {
   toast.info('🔄 Formulário limpo!')
 }
 
+// Métodos para paginação
+const handlePageChange = (page: number) => {
+  paginationTest.currentPage = page
+  toast.info(`📄 Navegando para página ${page}`)
+}
+
+const setPaginationTest = (totalItems: number, itemsPerPage: number, currentPage: number) => {
+  paginationTest.totalItems = totalItems
+  paginationTest.itemsPerPage = itemsPerPage
+  paginationTest.currentPage = currentPage
+  toast.info(`📊 Configuração: ${totalItems} itens, ${itemsPerPage} por página`)
+}
+
 // Log de desenvolvimento
 console.log('🧪 Página de teste carregada!')
-console.log('📊 Componentes disponíveis: BaseButton, BaseInput, Heroicons, Toast')
+console.log('📊 Componentes disponíveis: BaseButton, BaseInput, Heroicons, Toast, BasePagination')
 </script>
 
 <style scoped>

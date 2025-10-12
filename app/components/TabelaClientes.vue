@@ -47,13 +47,13 @@
               {{ cliente.nome || '-' }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ cliente.cpf || '-' }}
+              {{ formatarCPF(cliente.cpf) || '-' }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
               {{ cliente.email || '-' }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ cliente.telefone || '-' }}
+              {{ formatarTelefone(cliente.telefone) || '-' }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
               {{ cliente.endereco || '-' }}
@@ -115,4 +115,38 @@ const emit = defineEmits<{
   editar: [cliente: AgCliente]
   deletar: [cliente: AgCliente]
 }>()
+
+// Função para formatar CPF
+const formatarCPF = (cpf: string | null): string => {
+  if (!cpf) return ''
+  
+  // Remove todos os caracteres não numéricos
+  const numeros = cpf.replace(/\D/g, '')
+  
+  // Verifica se tem 11 dígitos
+  if (numeros.length !== 11) return cpf
+  
+  // Aplica a formatação xxx.xxx.xxx-xx
+  return numeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+}
+
+// Função para formatar telefone
+const formatarTelefone = (telefone: string | null): string => {
+  if (!telefone) return ''
+  
+  // Remove todos os caracteres não numéricos
+  const numeros = telefone.replace(/\D/g, '')
+  
+  // Verifica se é celular (11 dígitos) ou fixo (10 dígitos)
+  if (numeros.length === 11) {
+    // Celular: (xx) xxxxx-xxxx
+    return numeros.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
+  } else if (numeros.length === 10) {
+    // Fixo: (xx) xxxx-xxxx
+    return numeros.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3')
+  }
+  
+  // Se não tem o formato esperado, retorna como está
+  return telefone
+}
 </script>
