@@ -1,5 +1,10 @@
 <template>
-  <div class="profissional-atual">
+  <button 
+    class="profissional-atual"
+    :class="{ 'cursor-default': desabilitarClick }"
+    :disabled="loading"
+    @click="handleClick"
+  >
     <div v-if="loading" class="loading">
       <div class="loading-text">Carregando...</div>
     </div>
@@ -17,7 +22,14 @@
       <div class="nome-profissional">Nenhum profissional</div>
       <div class="especialidade">Cadastrado</div>
     </div>
-  </div>
+
+    <!-- Ícone de dropdown -->
+    <div v-if="!loading" class="dropdown-icon">
+      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </button>
 </template>
 
 <script setup lang="ts">
@@ -30,6 +42,22 @@ import { useUserStore } from '~/stores/user'
 defineOptions({
   name: 'ProfissionalAtual'
 })
+
+// Props
+interface Props {
+  profissionalSelecionadoId?: number | null
+  desabilitarClick?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  desabilitarClick: false
+})
+
+// Emits
+const emit = defineEmits<{
+  click: []
+  'profissionais-carregados': [profissionais: AgProfissional[]]
+}>()
 
 // Estado reativo
 const profissionais = ref<AgProfissional[]>([])
@@ -44,6 +72,18 @@ const { buscarProfissionais } = useProfissionais()
 // Computed para encontrar o profissional atual
 const profissionalAtual = computed(() => {
   if (profissionais.value.length === 0) return null
+  
+  // Se há um profissional selecionado via prop, usar ele
+  if (props.profissionalSelecionadoId) {
+    const profissionalSelecionado = profissionais.value.find(
+      prof => prof.profissional_id === props.profissionalSelecionadoId
+    )
+    
+    if (profissionalSelecionado) {
+      console.log('👨‍⚕️ Profissional selecionado via prop:', profissionalSelecionado)
+      return profissionalSelecionado
+    }
+  }
   
   // Se o usuário tem um perfil, tentar encontrar o profissional correspondente
   if (userStore.profile?.id) {
@@ -74,10 +114,21 @@ const carregarProfissionais = async () => {
     
     console.log('📋 Profissionais carregados:', dados.length)
     console.log('🎯 Profissional atual selecionado:', profissionalAtual.value)
+    
+    // Emitir evento com os profissionais carregados
+    emit('profissionais-carregados', dados)
   } catch (error) {
     console.error('❌ Erro ao carregar profissionais:', error)
   } finally {
     loading.value = false
+  }
+}
+
+// Função para lidar com clique
+const handleClick = () => {
+  if (!loading.value && !props.desabilitarClick) {
+    console.log('🖱️ Clique no profissional atual')
+    emit('click')
   }
 }
 
@@ -93,20 +144,52 @@ console.log('👨‍⚕️ ProfissionalAtual carregado')
 <style scoped>
 .profissional-atual {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: space-between;
+  text-align: left;
   padding: 0.5rem 1rem;
   min-width: 200px;
+  background-color: transparent;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  gap: 0.75rem;
+}
+
+.profissional-atual:hover:not(:disabled):not(.cursor-default) {
+  background-color: #f3f4f6;
+  border-color: #e5e7eb;
+}
+
+.profissional-atual.cursor-default {
+  cursor: default;
+}
+
+.profissional-atual.cursor-default .dropdown-icon {
+  display: none;
+}
+
+.profissional-atual:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .profissional-info,
 .sem-profissional {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.25rem;
+  flex: 1;
+}
+
+.dropdown-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nome-profissional {

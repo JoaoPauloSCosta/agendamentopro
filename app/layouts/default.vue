@@ -8,9 +8,10 @@
       </div>
 
       <!-- Área Principal -->
-      <main class="main-content flex-1 overflow-y-auto p-6">
+      <main class="main-content flex-1 overflow-hidden p-6 h-full">
         <!-- Slot para o conteúdo da página -->
-        <slot>
+        <div class="h-full">
+          <slot>
           <!-- Conteúdo padrão caso não haja slot -->
           <div class="text-center py-12">
             <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -21,7 +22,8 @@
             <h3 class="text-lg font-medium text-gray-900 mb-2">Conteúdo da Página</h3>
             <p class="text-gray-500">O conteúdo da página será exibido aqui.</p>
           </div>
-        </slot>
+          </slot>
+        </div>
       </main>
     </div>
 

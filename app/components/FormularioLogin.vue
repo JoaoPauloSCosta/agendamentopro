@@ -14,51 +14,27 @@
     <form @submit.prevent="handleSubmit" class="space-y-6">
       <!-- Campo Email -->
       <div>
-        <BaseInput
-          v-model="formData.email"
-          type="email"
-          label="Email"
-          placeholder="Digite seu email"
-          :required="true"
-          autocomplete="email"
-          size="lg"
-          :icon-left="EnvelopeIcon"
-        />
+        <BaseInput v-model="formData.email" type="email" label="Email" placeholder="Digite seu email" :required="true"
+          autocomplete="email" size="lg" :icon-left="EnvelopeIcon" />
       </div>
 
       <!-- Campo Senha -->
       <div>
-        <BaseInput
-          v-model="formData.password"
-          type="password"
-          label="Senha"
-          placeholder="Digite sua senha"
-          :required="true"
-          autocomplete="current-password"
-          size="lg"
-          :icon-left="LockClosedIcon"
-        />
+        <BaseInput v-model="formData.password" type="password" label="Senha" placeholder="Digite sua senha"
+          :required="true" autocomplete="current-password" size="lg" :icon-left="LockClosedIcon" />
       </div>
 
       <!-- Link Esqueci a Senha -->
       <div class="flex justify-end">
-        <a 
-          href="#" 
-          class="text-sm text-primary-600 hover:text-primary-700 transition-colors duration-200"
-        >
+        <a href="/esqueci-senha"
+          class="text-sm text-primary-600 hover:text-primary-700 transition-colors duration-200">
           Esqueci minha senha
         </a>
       </div>
 
       <!-- Botão Entrar -->
       <div class="pt-2">
-        <BaseButton
-          type="submit"
-          variant="primary"
-          size="lg"
-          :full-width="true"
-          :loading="isLoading"
-        >
+        <BaseButton type="submit" variant="primary" size="lg" :full-width="true" :loading="isLoading">
           Entrar
         </BaseButton>
       </div>
@@ -68,10 +44,7 @@
     <div class="mt-8 text-center">
       <p class="text-neutral-600">
         Não tem uma conta?
-        <a 
-          href="#" 
-          class="text-primary-600 hover:text-primary-700 font-medium transition-colors duration-200"
-        >
+        <a href="#" class="text-primary-600 hover:text-primary-700 font-medium transition-colors duration-200">
           Criar conta
         </a>
       </p>
@@ -82,9 +55,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
+import { useToast } from 'vue-toastification'
 
 // Composable de autenticação
-const { login, isLoading, error } = useAuth()
+const { login, isLoading } = useAuth()
+const toast = useToast()
 
 // Dados do formulário
 const formData = ref({
@@ -99,9 +74,22 @@ const handleSubmit = async () => {
   }
 
   const result = await login(formData.value.email, formData.value.password)
-  
+
   if (!result.success) {
-    // O erro já é tratado pelo composable useAuth
+    // Verificar se é erro de senha incorreta
+    const errorMessage = result.error?.toLowerCase() || ''
+    
+    if (errorMessage.includes('invalid') || 
+        errorMessage.includes('password') || 
+        errorMessage.includes('credentials') ||
+        errorMessage.includes('incorrect')) {
+      toast.error('Senha incorreta. Tente novamente')
+    } else if (errorMessage.includes('email')) {
+      toast.error('Email não encontrado')
+    } else {
+      toast.error('Erro ao fazer login. Tente novamente')
+    }
+    
     console.error('Erro no login:', result.error)
   }
   // Se o login for bem-sucedido, o redirecionamento é feito automaticamente pelo composable

@@ -6,6 +6,7 @@ export const useProfissionais = () => {
   // Buscar profissionais
   const buscarProfissionais = async (): Promise<AgProfissional[]> => {
     try {
+      // @ts-ignore - RPC function not in generated types
       const { data, error } = await supabase
         .rpc('ag_get_profissionais')
 
@@ -45,8 +46,9 @@ export const useProfissionais = () => {
   const inserirEspecialidade = async (nomeEspecialidade: string): Promise<AgAddEspecialidadeResponse> => {
     try {
       console.log('Chamando RPC ag_add_especialidade com:', nomeEspecialidade)
-      
+
       const { data, error } = await supabase
+        // @ts-ignore - RPC function not in generated types
         .rpc('ag_add_especialidade', {
           p_especialidade: nomeEspecialidade
         })
@@ -84,11 +86,11 @@ export const useProfissionais = () => {
       // Se data é um objeto, verificar suas propriedades
       console.log('Data é um objeto:', data)
       const result = data as Record<string, any>
-      
+
       // Verificar se tem propriedade success
       const hasSuccess = 'success' in result
       const successValue = hasSuccess ? Boolean(result.success) : true
-      
+
       // Verificar se tem propriedade message
       const hasMessage = 'message' in result
       const messageValue = hasMessage ? String(result.message) : 'Especialidade inserida com sucesso!'
@@ -110,8 +112,9 @@ export const useProfissionais = () => {
   const editarEspecialidade = async (id: number, novoNome: string): Promise<AgAddEspecialidadeResponse> => {
     try {
       console.log('Chamando RPC ag_update_especialidade com:', { id, novoNome })
-      
+
       const { data, error } = await supabase
+        // @ts-ignore - RPC function not in generated types
         .rpc('ag_update_especialidade', {
           p_id: id,
           p_nova_especialidade: novoNome
@@ -150,11 +153,11 @@ export const useProfissionais = () => {
       // Se data é um objeto, verificar suas propriedades
       console.log('Data é um objeto:', data)
       const result = data as Record<string, any>
-      
+
       // Verificar se tem propriedade success
       const hasSuccess = 'success' in result
       const successValue = hasSuccess ? Boolean(result.success) : true
-      
+
       // Verificar se tem propriedade message
       const hasMessage = 'message' in result
       const messageValue = hasMessage ? String(result.message) : 'Especialidade editada com sucesso!'
@@ -176,7 +179,7 @@ export const useProfissionais = () => {
   const deletarEspecialidade = async (id: number): Promise<AgAddEspecialidadeResponse> => {
     try {
       console.log('Deletando especialidade com ID:', id)
-      
+
       const { error } = await supabase
         .from('ag_especialidades')
         .delete()
@@ -209,6 +212,7 @@ export const useProfissionais = () => {
   // Buscar perfis
   const buscarPerfis = async (): Promise<AgPerfil[]> => {
     try {
+      // @ts-ignore - RPC function not in generated types
       const { data, error } = await supabase
         .rpc('ag_get_all_profiles_if_admin')
 
@@ -228,9 +232,10 @@ export const useProfissionais = () => {
   const inserirProfissional = async (profileId: number, especialidadeId: number): Promise<AgAddEspecialidadeResponse> => {
     try {
       console.log('Inserindo profissional com:', { profileId, especialidadeId })
-      
+
       const { data, error } = await supabase
         .from('ag_profissionais')
+        // @ts-ignore - Table types not properly generated
         .insert({
           profile_id: profileId,
           especialidade_id: especialidadeId
@@ -265,9 +270,10 @@ export const useProfissionais = () => {
   const editarProfissional = async (profissionalId: number, profileId: number, especialidadeId: number): Promise<AgAddEspecialidadeResponse> => {
     try {
       console.log('Editando profissional com:', { profissionalId, profileId, especialidadeId })
-      
+
       const { data, error } = await supabase
         .from('ag_profissionais')
+        // @ts-ignore - Table types not properly generated
         .update({
           profile_id: profileId,
           especialidade_id: especialidadeId
@@ -303,7 +309,7 @@ export const useProfissionais = () => {
   const deletarProfissional = async (profissionalId: number): Promise<AgAddEspecialidadeResponse> => {
     try {
       console.log('Deletando profissional com ID:', profissionalId)
-      
+
       const { error } = await supabase
         .from('ag_profissionais')
         .delete()
@@ -363,9 +369,10 @@ export const useProfissionais = () => {
   }): Promise<AgAddEspecialidadeResponse> => {
     try {
       console.log('Inserindo cliente com:', dadosCliente)
-      
+
       const { data, error } = await supabase
         .from('ag_clientes')
+        // @ts-ignore - Table types not properly generated
         .insert({
           nome: dadosCliente.nome,
           cpf: dadosCliente.cpf,
@@ -380,15 +387,15 @@ export const useProfissionais = () => {
       // Verificação de erro do Supabase
       if (error) {
         console.error('Erro do Supabase:', error)
-        
+
         // Traduzir mensagens de erro específicas
         let errorMessage = String(error?.message || error || 'Erro ao inserir cliente')
-        
+
         // Verificar se é erro de CPF duplicado
         if (error.code === '23505' && error.message?.includes('cpf')) {
           errorMessage = 'CPF já cadastrado'
         }
-        
+
         return {
           success: false,
           message: errorMessage
@@ -418,9 +425,10 @@ export const useProfissionais = () => {
   }): Promise<AgAddEspecialidadeResponse> => {
     try {
       console.log('Editando cliente com ID:', clienteId, 'dados:', dadosCliente)
-      
+
       const { data, error } = await supabase
         .from('ag_clientes')
+        // @ts-ignore - Table types not properly generated
         .update({
           nome: dadosCliente.nome,
           cpf: dadosCliente.cpf,
@@ -436,15 +444,15 @@ export const useProfissionais = () => {
       // Verificação de erro do Supabase
       if (error) {
         console.error('Erro do Supabase:', error)
-        
+
         // Traduzir mensagens de erro específicas
         let errorMessage = String(error?.message || error || 'Erro ao editar cliente')
-        
+
         // Verificar se é erro de CPF duplicado
         if (error.code === '23505' && error.message?.includes('cpf')) {
           errorMessage = 'CPF já cadastrado'
         }
-        
+
         return {
           success: false,
           message: errorMessage
@@ -468,7 +476,7 @@ export const useProfissionais = () => {
   const deletarCliente = async (clienteId: number): Promise<AgAddEspecialidadeResponse> => {
     try {
       console.log('Deletando cliente com ID:', clienteId)
-      
+
       const { error } = await supabase
         .from('ag_clientes')
         .delete()

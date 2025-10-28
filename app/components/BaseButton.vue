@@ -100,19 +100,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>()
 
-// ID único para o botão (usando contador para evitar problemas de hidratação)
-let buttonIdCounter = 0
-const buttonId = computed(() => {
-  if (props.id) return props.id
-  
-  // Durante a hidratação, usar um ID baseado em contador para consistência
-  if (process.client) {
-    return `btn-${++buttonIdCounter}`
-  }
-  
-  // No servidor, usar um ID simples
-  return 'btn-ssr'
-})
+// ID único para o botão - usar undefined se não fornecido para evitar problemas de hidratação
+const buttonId = computed(() => props.id)
 
 // Classes computadas baseadas no system design
 const buttonClasses = computed(() => {

@@ -117,6 +117,23 @@
             </template>
             <span v-show="!isCollapsed" class="button-text">Especialidades</span>
           </BaseButton>
+
+          <BaseButton
+            v-if="isAdmin"
+            variant="ghost"
+            size="md"
+            :full-width="!isCollapsed"
+            :class="[
+              'text-blue-600 hover:bg-blue-50 transition-colors',
+              isCollapsed ? 'justify-center px-2' : 'justify-start text-left'
+            ]"
+            @click="navigate('/admin')"
+          >
+            <template #iconLeft>
+              <ShieldCheckIcon class="w-5 h-5 text-blue-600" />
+            </template>
+            <span v-show="!isCollapsed" class="button-text">Admin</span>
+          </BaseButton>
         </div>
       </div>
     </nav>
@@ -180,7 +197,8 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  ShieldCheckIcon
 } from '@heroicons/vue/24/outline'
 
 // Estado do dropdown
@@ -208,6 +226,12 @@ const saveSidebarState = (collapsed: boolean) => {
 
 // Composable de autenticação
 const { logout } = useAuth()
+
+// Store do usuário
+const userStore = useUserStore()
+
+// Verificar se o usuário é admin
+const isAdmin = computed(() => userStore.isAdmin)
 
 // Funções de navegação
 const navigate = async (path: string) => {

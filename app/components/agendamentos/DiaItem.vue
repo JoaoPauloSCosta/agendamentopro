@@ -30,7 +30,7 @@ const formatarDia = (data: Date): string => {
 // Função para obter nome do dia da semana abreviado
 const obterNomeDia = (data: Date): string => {
   const nomesDias = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']
-  return nomesDias[data.getDay()]
+  return nomesDias[data.getDay()] || ''
 }
 </script>
 
@@ -44,18 +44,13 @@ const obterNomeDia = (data: Date): string => {
   border-radius: 6px;
   transition: all 0.2s ease;
   cursor: pointer;
-  background-color: transparent;
-  border: 1px solid #e2e8f0;
+  background-color: #cbd5e1;
+
   min-height: 60px;
   justify-content: center;
 }
 
-.dia-item:hover {
-  background-color: #e2e8f0;
-  border-color: #cbd5e1;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+
 
 .dia-numero {
   font-size: 1.125rem;

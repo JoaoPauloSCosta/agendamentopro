@@ -18,6 +18,8 @@ defineOptions({
   name: 'ReguaHorarios'
 })
 
+import { computed } from 'vue'
+
 // Gerar lista de horários das 8h às 22h
 const horarios = computed(() => {
   const listaHorarios: string[] = []
@@ -44,13 +46,13 @@ console.log('⏰ ReguaHorarios carregado')
 }
 
 .horarios-lista {
-  flex: 1;
   display: flex;
   flex-direction: column;
+  height: 1500px; /* Altura fixa: 15 horários × 100px = 1500px */
 }
 
 .horario-item {
-  padding: 0.25rem 0.125rem;
+  padding: 0.125rem 0.125rem;
   border-bottom: 1px solid #f1f5f9;
   font-size: 0.625rem;
   font-weight: 500;
@@ -58,7 +60,7 @@ console.log('⏰ ReguaHorarios carregado')
   text-align: center;
   transition: all 0.2s ease;
   cursor: pointer;
-  height: 60px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;

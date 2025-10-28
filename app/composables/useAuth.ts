@@ -28,7 +28,7 @@ export const useAuth = () => {
 
       // Redirecionar para a página index após login bem-sucedido
       await navigateTo('/')
-      
+
       return { success: true, user: data.user }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido'
@@ -56,7 +56,7 @@ export const useAuth = () => {
 
       // Redirecionar para a página de login após logout
       await navigateTo('/login')
-      
+
       return { success: true }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido'
@@ -75,8 +75,118 @@ export const useAuth = () => {
   /**
    * Função para obter dados do usuário atual
    */
-  const getCurrentUser = (): User | null => {
+  const getCurrentUser = () => {
     return user.value
+  }
+
+  /**
+   * Função para alterar a senha do usuário
+   */
+  const changePassword = async (newPassword: string) => {
+    try {
+      isLoading.value = true
+      error.value = null
+
+      const { data, error: authError } = await supabase.auth.updateUser({
+        password: newPassword
+      })
+
+      if (authError) {
+        error.value = authError.message
+        return { success: false, error: authError.message }
+      }
+
+      return { success: true, message: 'Senha alterada com sucesso!' }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao alterar senha'
+      error.value = errorMessage
+      return { success: false, error: errorMessage }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
+   * Função para alterar o nome do usuário
+   */
+  const updateUserName = async (newName: string) => {
+    try {
+      isLoading.value = true
+      error.value = null
+
+      // @ts-ignore - RPC function not in generated types
+      const { data, error: rpcError } = await supabase.rpc('ag_update_infos_user', {
+        new_name: newName
+      })
+
+      if (rpcError) {
+        console.error(rpcError)
+        error.value = rpcError.message
+        return { success: false, message: rpcError.message }
+      }
+
+      console.log(data)
+      return data as { success: boolean; message: string }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao atualizar nome'
+      error.value = errorMessage
+      return { success: false, message: errorMessage }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
+   * Função para solicitar recuperação de senha
+   */
+  const requestPasswordReset = async (email: string) => {
+    try {
+      isLoading.value = true
+      error.value = null
+
+      const config = useRuntimeConfig()
+      const baseUrl = config.public.siteUrl || 'http://localhost:3000'
+
+      const { data, error: authError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${baseUrl}/recuperar-senha`,
+      })
+
+      if (authError) {
+        error.value = authError.message
+        return { success: false, error: authError.message }
+      }
+
+      return { success: true, message: 'Email de recuperação enviado com sucesso!' }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao solicitar recuperação de senha'
+      error.value = errorMessage
+      return { success: false, error: errorMessage }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
+   * Função para verificar se o usuário é admin
+   */
+  const checkIsAdmin = async (userId: string) => {
+    try {
+      // @ts-ignore - RPC function not in generated types
+      const { data, error: rpcError } = await supabase.rpc('ag_isadmin', {
+        p_user_id: userId
+      })
+
+      if (rpcError) {
+        console.error('Erro ao verificar admin:', rpcError)
+        return { isAdmin: false }
+      }
+
+      console.log('Resultado checkIsAdmin:', data)
+      return data as { isadmin: boolean }
+    } catch (err) {
+      console.error('Erro na função checkIsAdmin:', err)
+      return { isadmin: false }
+    }
   }
 
   return {
@@ -90,5 +200,9 @@ export const useAuth = () => {
     login,
     logout,
     getCurrentUser,
+    changePassword,
+    updateUserName,
+    requestPasswordReset,
+    checkIsAdmin,
   }
 }

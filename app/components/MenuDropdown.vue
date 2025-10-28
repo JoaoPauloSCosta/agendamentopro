@@ -45,10 +45,12 @@ const emit = defineEmits<{
   logout: []
 }>()
 
+// Router
+const router = useRouter()
+
 // Handlers
 const handleProfile = () => {
-  // Por enquanto não faz nada, como solicitado
-  console.log('Perfil clicado - funcionalidade será implementada futuramente')
+  router.push('/perfil')
   emit('close')
 }
 

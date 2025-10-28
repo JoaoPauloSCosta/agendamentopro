@@ -1,8 +1,6 @@
 <template>
   <NuxtLayout>
-    <div class="p-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-6">Agendamentos</h1>
-      
+    <div class="h-full overflow-y-auto">
       <!-- Componente principal de gerenciamento de agendamentos -->
       <AgendamentoManager />
     </div>
