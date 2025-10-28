@@ -58,13 +58,10 @@ import { PlusIcon } from '@heroicons/vue/24/outline'
 import TabelaProfissionais from '~/components/TabelaProfissionais.vue'
 import ModalProfissional from '~/components/ModalProfissional.vue'
 import ModalConfirmacao from '~/components/ModalConfirmacao.vue'
-import { useToast } from 'vue-toastification'
 
 // Store do usuário
+const toast = useNuxtApp().$toast
 const userStore = useUserStore()
-
-// Toast
-const toast = useToast()
 
 // Estado reativo
 const profissionais = ref<AgProfissional[]>([])

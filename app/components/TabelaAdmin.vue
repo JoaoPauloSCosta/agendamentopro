@@ -153,11 +153,10 @@
 <script setup lang="ts">
 import { PlusIcon, UserIcon, EnvelopeIcon, LockClosedIcon, ShieldCheckIcon, TrashIcon } from '@heroicons/vue/24/outline'
 import type { AgPerfil } from '~/types/database'
-import { useToast } from 'vue-toastification'
 
 // Composable
+const toast = useNuxtApp().$toast
 const { buscarPerfis } = useProfissionais()
-const toast = useToast()
 
 // Estado
 const perfis = ref<AgPerfil[]>([])

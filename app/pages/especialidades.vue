@@ -54,13 +54,10 @@ import type { AgEspecialidade } from '~/types/database'
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import ModalEspecialidade from '~/components/ModalEspecialidade.vue'
 import ModalConfirmacao from '~/components/ModalConfirmacao.vue'
-import { useToast } from 'vue-toastification'
 
 // Store do usuário
+const toast = useNuxtApp().$toast
 const userStore = useUserStore()
-
-// Toast
-const toast = useToast()
 
 // Estado reativo
 const especialidades = ref<AgEspecialidade[]>([])

@@ -47,11 +47,10 @@
 
 <script setup lang="ts">
 import { KeyIcon } from '@heroicons/vue/24/outline'
-import { useToast } from 'vue-toastification'
 
 // Composables
+const toast = useNuxtApp().$toast
 const { changePassword, isLoading } = useAuth()
-const toast = useToast()
 
 // Estado local
 const novaSenha = ref('')

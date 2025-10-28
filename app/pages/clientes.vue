@@ -53,10 +53,9 @@ import type { AgCliente } from '~/types/database'
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import ModalConfirmacao from '~/components/ModalConfirmacao.vue'
 import ModalCliente from '~/components/ModalCliente.vue'
-import { useToast } from 'vue-toastification'
 
 // Toast
-const toast = useToast()
+const toast = useNuxtApp().$toast
 
 // Estado reativo
 const clientes = ref<AgCliente[]>([])

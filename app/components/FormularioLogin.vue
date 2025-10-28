@@ -55,11 +55,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
-import { useToast } from 'vue-toastification'
 
 // Composable de autenticação
+const toast = useNuxtApp().$toast
 const { login, isLoading } = useAuth()
-const toast = useToast()
 
 // Dados do formulário
 const formData = ref({

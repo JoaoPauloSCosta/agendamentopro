@@ -77,11 +77,10 @@
 
 <script setup lang="ts">
 import { LockClosedIcon, KeyIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline'
-import { useToast } from 'vue-toastification'
 
 // Composables
+const toast = useNuxtApp().$toast
 const { changePassword, isLoading } = useAuth()
-const toast = useToast()
 const router = useRouter()
 
 // Estado local

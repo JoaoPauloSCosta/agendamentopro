@@ -265,8 +265,9 @@ import SeletorCliente from './SeletorCliente.vue'
 import { useAgendamentoStore } from '~/stores/agendamento'
 import { useValidacaoHorarios } from '~/composables/useValidacaoHorarios'
 import { useAgendamentos } from '~/composables/useAgendamentos'
-import { useToast } from 'vue-toastification'
 import type { AgCliente } from '~/types/database'
+
+const toast = useNuxtApp().$toast
 
 // Configuração do componente
 defineOptions({
@@ -303,7 +304,6 @@ const emit = defineEmits<Emits>()
 // Store e Composables
 const agendamentoStore = useAgendamentoStore()
 const { inserirAgendamento, loading: loadingAgendamento, error: errorAgendamento } = useAgendamentos()
-const toast = useToast()
 
 // Criar validação de horários reativa baseada nos agendamentos existentes
 const validacaoHorarios = computed(() => {

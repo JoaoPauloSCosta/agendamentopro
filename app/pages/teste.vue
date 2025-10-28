@@ -492,19 +492,14 @@ import {
   CogIcon
 } from '@heroicons/vue/24/outline'
 
-// Import do toast
-import { useToast } from 'vue-toastification'
-
 // Configuração da página
+const toast = useNuxtApp().$toast
 useHead({
   title: 'Teste de Componentes - Agendamento',
   meta: [
     { name: 'description', content: 'Página de teste para componentes BaseButton, BaseInput, Heroicons e Toast' }
   ]
 })
-
-// Inicializar toast
-const toast = useToast()
 
 // Estados dos componentes BaseButton
 const buttonLoading = ref(false)

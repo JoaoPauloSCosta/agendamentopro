@@ -34,7 +34,8 @@ import { computed, reactive, ref, watch, nextTick } from 'vue'
 import { AcademicCapIcon } from '@heroicons/vue/24/outline'
 import BaseModal from './BaseModal.vue'
 import BaseInput from './BaseInput.vue'
-import { useToast } from 'vue-toastification'
+
+const toast = useNuxtApp().$toast
 
 interface Props {
   isOpen?: boolean
@@ -60,9 +61,6 @@ const emit = defineEmits<Emits>()
 
 // Composables
 const { inserirEspecialidade, editarEspecialidade, buscarEspecialidades } = useProfissionais()
-
-// Toast
-const toast = useToast()
 
 // Tipos
 interface EspecialidadeFormData {

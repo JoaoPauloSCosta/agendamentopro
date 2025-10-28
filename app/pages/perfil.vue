@@ -69,14 +69,13 @@
 <script setup lang="ts">
 import { UserIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
 import { useUserStore } from '~/stores/user'
-import { useToast } from 'vue-toastification'
 
 // Store
+const toast = useNuxtApp().$toast
 const userStore = useUserStore()
 
 // Composables
 const { updateUserName, isLoading } = useAuth()
-const toast = useToast()
 
 // Estado local
 const nome = ref('')

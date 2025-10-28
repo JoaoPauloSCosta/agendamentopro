@@ -76,8 +76,9 @@ import { computed, reactive, ref, watch, nextTick } from 'vue'
 import { UserIcon } from '@heroicons/vue/24/outline'
 import BaseModal from './BaseModal.vue'
 import BaseInput from './BaseInput.vue'
-import { useToast } from 'vue-toastification'
 import type { AgCliente } from '~/types/database'
+
+const toast = useNuxtApp().$toast
 
 interface Props {
   isOpen?: boolean
@@ -105,9 +106,6 @@ const emit = defineEmits<Emits>()
 
 // Composables
 const { inserirCliente, buscarClientes, editarCliente } = useProfissionais()
-
-// Toast
-const toast = useToast()
 
 // Tipos
 interface ClienteFormData {

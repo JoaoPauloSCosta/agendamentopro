@@ -74,7 +74,8 @@ import { computed, reactive, ref, watch, nextTick } from 'vue'
 import { UserIcon } from '@heroicons/vue/24/outline'
 import BaseModal from './BaseModal.vue'
 import type { AgPerfil, AgEspecialidade } from '~/types/database'
-import { useToast } from 'vue-toastification'
+
+const toast = useNuxtApp().$toast
 
 interface Props {
   isOpen?: boolean
@@ -108,9 +109,6 @@ interface Emits {
 }
 
 const emit = defineEmits<Emits>()
-
-// Toast
-const toast = useToast()
 
 // Composable
 const { inserirProfissional, editarProfissional } = useProfissionais()
