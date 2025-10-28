@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const user = useSupabaseUser()
-  
+
   // Se não estiver autenticado, redirecionar para login
   if (!user.value) {
     return navigateTo('/login')
@@ -8,11 +8,21 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   // Verificar se é admin
   const supabase = useSupabaseClient()
-  
+
   try {
+    // Obter o ID do usuário (pode ser 'id' ou 'sub' dependendo do tipo)
+    const userId = (user.value as any).id || (user.value as any).sub
+    
+    if (!userId) {
+      console.error('ID do usuário não encontrado')
+      return navigateTo('/')
+    }
+
+    console.log('Verificando admin para user_id:', userId)
+
     // @ts-ignore - RPC function not in generated types
     const { data, error } = await supabase.rpc('ag_isadmin', {
-      p_user_id: user.value.id
+      p_user_id: userId
     })
 
     if (error) {
@@ -20,8 +30,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       return navigateTo('/')
     }
 
+    console.log('Resultado da verificação admin:', data)
+
     // Se não for admin, redirecionar para index
-    if (!data?.isadmin) {
+    const result = data as { isadmin: boolean } | null
+    if (!result?.isadmin) {
       console.log('Usuário não é admin, redirecionando...')
       return navigateTo('/')
     }

@@ -215,6 +215,11 @@ const carregarAgendamentos = async () => {
   try {
     loadingAgendamentos.value = true
     console.log('🔍 Carregando agendamentos para profissional:', profissionalAtualId.value)
+    console.log('📊 Array ANTES de carregar:', agendamentos.value.length)
+    
+    // Limpar array antes de carregar novos dados
+    agendamentos.value = []
+    console.log('🗑️ Array limpo')
     
     // Obter início e fim da semana atual do store
     const diasSemana = agendamentoStore.diasSemana
@@ -234,6 +239,9 @@ const carregarAgendamentos = async () => {
       fimSemana
     )
     
+    console.log('📦 Dados recebidos da API:', dados.length)
+    console.log('📋 IDs recebidos:', dados.map(a => a.id))
+    
     // Ordenar agendamentos do mais atual para o mais antigo
     // Combina data e hora_inicio para ordenação precisa
     const dadosOrdenados = dados.sort((a, b) => {
@@ -244,7 +252,8 @@ const carregarAgendamentos = async () => {
     
     agendamentos.value = dadosOrdenados
     
-    console.log('✅ Agendamentos carregados e ordenados:', dados.length)
+    console.log('✅ Agendamentos carregados e ordenados:', dadosOrdenados.length)
+    console.log('📋 IDs finais no array:', agendamentos.value.map(a => a.id))
   } catch (error) {
     console.error('❌ Erro ao carregar agendamentos:', error)
     agendamentos.value = []
@@ -326,34 +335,21 @@ const fecharModalNovoAgendamento = () => {
 
 const confirmarNovoAgendamento = async (dados: any) => {
   console.log('✅ Confirmando novo agendamento:', dados)
-  console.log('📊 Agendamentos antes da atualização:', agendamentos.value.length)
   
   try {
     // Fechar o modal primeiro
     modalNovoAgendamentoAberto.value = false
     console.log('🚪 Modal fechado')
     
-    // Aguardar um pouco para garantir que o modal fechou
-    await new Promise(resolve => setTimeout(resolve, 100))
-    console.log('⏱️ Aguardou 100ms')
-    
-    // FORÇAR limpeza do cache antes de recarregar
-    console.log('🗑️ Forçando limpeza do cache...')
+    // Limpar cache para forçar recarregamento na próxima busca
+    console.log('🗑️ Limpando cache...')
     limparCache()
     
     // Recarregar agendamentos para mostrar o novo agendamento imediatamente
     console.log('🔄 Recarregando agendamentos após criação...')
-    console.log('👤 Profissional atual:', profissionalAtualId.value)
-    console.log('📅 Semana atual:', agendamentoStore.inicioSemana, 'até', agendamentoStore.fimSemana)
-    
     await carregarAgendamentos()
     
     console.log('✅ Lista de agendamentos atualizada!')
-    console.log('📊 Agendamentos após a atualização:', agendamentos.value.length)
-    
-    // Forçar reatividade
-    await nextTick()
-    console.log('🔄 nextTick executado para forçar reatividade')
     
   } catch (error) {
     console.error('❌ Erro ao recarregar agendamentos:', error)
@@ -422,14 +418,24 @@ const confirmarEdicaoAgendamento = async (dadosAgendamento: any) => {
     
     console.log('✅ Agendamento atualizado com sucesso!')
     
-    // Fechar modal
-    fecharModalEdicao()
-    
-    // Recarregar agendamentos
-    await recarregarAgendamentos()
+    // Atualizar o agendamento localmente no array para refletir as mudanças imediatamente
+    const index = agendamentos.value.findIndex(a => a.id === agendamentoParaEdicao.value?.id)
+    if (index !== -1) {
+      agendamentos.value[index] = {
+        ...agendamentos.value[index],
+        titulo: dadosAgendamento.titulo,
+        descricao: dadosAgendamento.descricao,
+        cor: dadosAgendamento.cor
+      }
+      console.log('🔄 Agendamento atualizado localmente no array')
+    }
     
   } catch (error) {
     console.error('❌ Erro ao atualizar agendamento:', error)
+    
+    // Mostrar toast de erro
+    const { $toast } = useNuxtApp()
+    $toast.error('Erro ao atualizar agendamento. Tente novamente.')
   }
 }
 

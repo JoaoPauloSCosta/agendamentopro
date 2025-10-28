@@ -513,6 +513,7 @@ const validarFormulario = (): boolean => {
 // Handlers do modal
 const handleConfirm = async () => {
   console.log('🚀 Iniciando handleConfirm...')
+  console.log('📝 Modo:', props.modoEdicao ? 'EDIÇÃO' : 'CRIAÇÃO')
   
   if (!validarFormulario()) {
     console.log('❌ Formulário inválido:', erros.value)
@@ -522,6 +523,38 @@ const handleConfirm = async () => {
   try {
     loading.value = true
     sucesso.value = false
+    
+    // MODO EDIÇÃO - apenas emitir os dados editáveis
+    if (props.modoEdicao) {
+      console.log('✏️ Modo edição - emitindo apenas campos editáveis')
+      
+      const dadosEdicao = {
+        titulo: formData.value.titulo,
+        descricao: formData.value.descricao,
+        cor: formData.value.cor
+      }
+      
+      console.log('📦 Dados de edição:', dadosEdicao)
+      
+      // Mostrar toast de sucesso
+      toast.success('Agendamento editado com sucesso!', {
+        timeout: 3000
+      })
+      
+      // Emitir evento de confirmação
+      emit('confirm', dadosEdicao)
+      
+      // Resetar formulário
+      resetForm()
+      
+      // Fechar modal
+      emit('close')
+      
+      return
+    }
+    
+    // MODO CRIAÇÃO - inserir novo agendamento
+    console.log('🆕 Modo criação - inserindo novo agendamento')
     
     // Validar dados antes de enviar
     if (!props.profissionalId) {
@@ -544,14 +577,6 @@ const handleConfirm = async () => {
     }
 
     console.log('📝 Dados do agendamento:', dadosAgendamento)
-    console.log('🔍 Validando dados:', {
-      profissionalId: !!dadosAgendamento.profissionalId,
-      clienteId: !!dadosAgendamento.clienteId,
-      titulo: !!dadosAgendamento.titulo,
-      data: !!dadosAgendamento.data,
-      horaInicio: !!dadosAgendamento.horaInicio,
-      horaFim: !!dadosAgendamento.horaFim
-    })
     
     // Inserir agendamento usando o composable
     console.log('📤 Chamando inserirAgendamento...')
@@ -560,20 +585,18 @@ const handleConfirm = async () => {
     console.log('✅ Agendamento criado com sucesso:', agendamentoCriado)
     sucesso.value = true
     
-    // Mostrar toast de sucesso - movido para antes do emit para garantir que apareça
+    // Mostrar toast de sucesso
     console.log('🍞 Mostrando toast de sucesso...')
     toast.success('Agendamento criado com sucesso!', {
       timeout: 3000
     })
     
-    // Aguardar um pouco antes de emitir o evento para garantir que o toast apareça
+    // Aguardar um pouco antes de emitir o evento
     await new Promise(resolve => setTimeout(resolve, 100))
     
     // Emitir evento de confirmação com os dados do agendamento criado
     console.log('📡 Emitindo evento confirm...')
-    console.log('📦 Dados sendo emitidos:', agendamentoCriado)
     emit('confirm', agendamentoCriado)
-    console.log('✅ Evento confirm emitido com sucesso!')
     
     // Resetar formulário após sucesso
     console.log('🔄 Resetando formulário...')
@@ -582,15 +605,15 @@ const handleConfirm = async () => {
     console.log('✅ handleConfirm finalizado com sucesso!')
     
   } catch (error) {
-    console.error('❌ Erro detalhado ao criar agendamento:', {
+    console.error('❌ Erro detalhado:', {
       error,
       message: error instanceof Error ? error.message : 'Erro desconhecido',
       stack: error instanceof Error ? error.stack : undefined,
       errorAgendamento: errorAgendamento.value
     })
     
-    // Mostrar toast de erro também
-    const errorMessage = error instanceof Error ? error.message : 'Erro ao criar agendamento. Tente novamente.'
+    // Mostrar toast de erro
+    const errorMessage = error instanceof Error ? error.message : 'Erro ao processar agendamento. Tente novamente.'
     toast.error(errorMessage, {
       timeout: 4000
     })

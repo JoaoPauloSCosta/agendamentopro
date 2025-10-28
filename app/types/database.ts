@@ -59,7 +59,11 @@ export interface AgProfissional {
 // Tipo para perfis (retorno da RPC ag_get_all_profiles_if_admin)
 export interface AgPerfil {
   id: number
+  created_at: string
+  user_id: string
   nome: string
+  role: string
+  email: string
 }
 
 // Tipo para clientes

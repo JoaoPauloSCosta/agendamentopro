@@ -118,22 +118,24 @@
             <span v-show="!isCollapsed" class="button-text">Especialidades</span>
           </BaseButton>
 
-          <BaseButton
-            v-if="isAdmin"
-            variant="ghost"
-            size="md"
-            :full-width="!isCollapsed"
-            :class="[
-              'text-blue-600 hover:bg-blue-50 transition-colors',
-              isCollapsed ? 'justify-center px-2' : 'justify-start text-left'
-            ]"
-            @click="navigate('/admin')"
-          >
-            <template #iconLeft>
-              <ShieldCheckIcon class="w-5 h-5 text-blue-600" />
-            </template>
-            <span v-show="!isCollapsed" class="button-text">Admin</span>
-          </BaseButton>
+          <ClientOnly>
+            <BaseButton
+              v-if="isAdmin"
+              variant="ghost"
+              size="md"
+              :full-width="!isCollapsed"
+              :class="[
+                'text-blue-600 hover:bg-blue-50 transition-colors',
+                isCollapsed ? 'justify-center px-2' : 'justify-start text-left'
+              ]"
+              @click="navigate('/admin')"
+            >
+              <template #iconLeft>
+                <ShieldCheckIcon class="w-5 h-5 text-blue-600" />
+              </template>
+              <span v-show="!isCollapsed" class="button-text">Admin</span>
+            </BaseButton>
+          </ClientOnly>
         </div>
       </div>
     </nav>
