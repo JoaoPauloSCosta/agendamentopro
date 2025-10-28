@@ -48,7 +48,7 @@ const emit = defineEmits<{
 // Função para lidar com clique no slot
 const handleSlotClick = (agendamentoId?: number) => {
   if (agendamentoId) {
-    console.log('📅 Agendamento clicado - ID:', agendamentoId)
+
     emit('slot-click', agendamentoId)
   }
 }
@@ -120,36 +120,27 @@ const slotsOcupados = computed(() => {
   // Usar fuso horário brasileiro para comparação
   const dataAtual = new Date(props.data.getTime() - (props.data.getTimezoneOffset() * 60000))
     .toISOString().split('T')[0] // YYYY-MM-DD
-  
-  console.log('📅 Data atual para comparação:', dataAtual)
-  console.log('📋 Agendamentos recebidos:', props.agendamentos)
-  
+
+
   const agendamentosDoDia = props.agendamentos.filter(agendamento => {
     if (!agendamento.data) return false
     
     // Ajustar data do agendamento para fuso horário brasileiro
     const dataAgendamento = new Date(agendamento.data + 'T00:00:00-03:00')
       .toISOString().split('T')[0]
-    
-    console.log('🔍 Comparando:', dataAgendamento, '===', dataAtual, '?', dataAgendamento === dataAtual)
-    
+
     return dataAgendamento === dataAtual
   })
-
-  console.log('✅ Agendamentos do dia encontrados:', agendamentosDoDia)
 
   // Converter para slots e filtrar nulos
   const slots = agendamentosDoDia
     .map(converterAgendamentoParaSlot)
     .filter((slot): slot is SlotAgendamento => slot !== null)
-    
-  console.log('🎯 Slots finais:', slots)
-  
+
   return slots
 })
 
 // Log de desenvolvimento
-console.log('📅 ItemAgendamento carregado para data:', props.data.toLocaleDateString('pt-BR'))
 </script>
 
 <style scoped>

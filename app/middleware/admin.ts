@@ -18,8 +18,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       return navigateTo('/')
     }
 
-    console.log('Verificando admin para user_id:', userId)
-
     // @ts-ignore - RPC function not in generated types
     const { data, error } = await supabase.rpc('ag_isadmin', {
       p_user_id: userId
@@ -30,17 +28,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       return navigateTo('/')
     }
 
-    console.log('Resultado da verificação admin:', data)
-
     // Se não for admin, redirecionar para index
     const result = data as { isadmin: boolean } | null
     if (!result?.isadmin) {
-      console.log('Usuário não é admin, redirecionando...')
       return navigateTo('/')
     }
 
     // Se for admin, permitir acesso
-    console.log('Usuário é admin, permitindo acesso')
   } catch (err) {
     console.error('Erro no middleware admin:', err)
     return navigateTo('/')

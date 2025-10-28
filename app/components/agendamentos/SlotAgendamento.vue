@@ -57,7 +57,7 @@ const emit = defineEmits<{
 
 // Função para lidar com o clique
 const handleClick = () => {
-  console.log('🖱️ Slot clicado - ID do agendamento:', props.agendamentoId)
+
   emit('click', props.agendamentoId)
 }
 

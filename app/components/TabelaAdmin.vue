@@ -155,7 +155,7 @@ import { PlusIcon, UserIcon, EnvelopeIcon, LockClosedIcon, ShieldCheckIcon, Tras
 import type { AgPerfil } from '~/types/database'
 
 // Composable
-const toast = useNuxtApp().$toast
+const toast = useNuxtApp().$toast as any
 const { buscarPerfis } = useProfissionais()
 
 // Estado
@@ -194,7 +194,6 @@ const carregarPerfis = async () => {
     loading.value = true
     error.value = null
     perfis.value = await buscarPerfis()
-    console.log('Perfis carregados:', perfis.value)
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Erro ao carregar usuários'
     console.error('Erro ao carregar perfis:', err)

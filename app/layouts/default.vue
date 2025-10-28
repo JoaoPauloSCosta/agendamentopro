@@ -65,8 +65,6 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 })
 
-// Log de desenvolvimento
-console.log('🏗️ Layout padrão do Nuxt carregado!')
 </script>
 
 <style scoped>

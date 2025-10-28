@@ -32,7 +32,7 @@ const horarios = computed(() => {
 })
 
 // Log de desenvolvimento
-console.log('⏰ ReguaHorarios carregado')
+
 </script>
 
 <style scoped>

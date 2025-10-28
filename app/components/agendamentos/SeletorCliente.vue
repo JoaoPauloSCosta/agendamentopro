@@ -129,13 +129,11 @@ const indiceSelecionado = ref(-1)
 const carregarClientes = async () => {
   try {
     carregandoClientes.value = true
-    console.log('🔍 Carregando clientes...')
-    
+
     const clientesData = await buscarClientes()
     clientes.value = clientesData
     clientesFiltrados.value = clientesData
-    
-    console.log('✅ Clientes carregados:', clientesData.length)
+
   } catch (error) {
     console.error('❌ Erro ao carregar clientes:', error)
     clientes.value = []

@@ -648,9 +648,6 @@ const setPaginationTest = (totalItems: number, itemsPerPage: number, currentPage
   toast.info(`📊 Configuração: ${totalItems} itens, ${itemsPerPage} por página`)
 }
 
-// Log de desenvolvimento
-console.log('🧪 Página de teste carregada!')
-console.log('📊 Componentes disponíveis: BaseButton, BaseInput, Heroicons, Toast, BasePagination')
 </script>
 
 <style scoped>

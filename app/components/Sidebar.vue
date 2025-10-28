@@ -237,17 +237,17 @@ const isAdmin = computed(() => userStore.isAdmin)
 
 // Funções de navegação
 const navigate = async (path: string) => {
-  console.log(`Navegando para: ${path}`)
-  console.log(`Sidebar colapsado: ${isCollapsed.value}`)
+
+
   await navigateTo(path)
 }
 
 // Função para alternar colapso da sidebar
 const toggleSidebar = () => {
-  console.log(`Toggle sidebar - antes: ${isCollapsed.value}`)
+
   isCollapsed.value = !isCollapsed.value
   saveSidebarState(isCollapsed.value) // Salvar estado no localStorage
-  console.log(`Toggle sidebar - depois: ${isCollapsed.value}`)
+
   // Fechar dropdown quando colapsar
   if (isCollapsed.value) {
     isDropdownOpen.value = false
@@ -267,7 +267,7 @@ const closeDropdown = () => {
 const handleLogout = async () => {
   try {
     await logout()
-    console.log('Logout realizado com sucesso')
+
   } catch (error) {
     console.error('Erro ao fazer logout:', error)
   }
@@ -279,7 +279,7 @@ onMounted(() => {
 })
 
 // Log de desenvolvimento
-console.log('🎨 Componente Sidebar carregado!')
+
 </script>
 
 <style scoped>

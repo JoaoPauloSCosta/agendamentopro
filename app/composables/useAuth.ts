@@ -125,7 +125,6 @@ export const useAuth = () => {
         return { success: false, message: rpcError.message }
       }
 
-      console.log(data)
       return data as { success: boolean; message: string }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao atualizar nome'
@@ -181,7 +180,6 @@ export const useAuth = () => {
         return { isAdmin: false }
       }
 
-      console.log('Resultado checkIsAdmin:', data)
       return data as { isadmin: boolean }
     } catch (err) {
       console.error('Erro na função checkIsAdmin:', err)

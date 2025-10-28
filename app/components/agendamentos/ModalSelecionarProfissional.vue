@@ -90,13 +90,13 @@ const handleClose = () => {
 
 // Função para selecionar um profissional
 const selecionarProfissional = (profissional: AgProfissional) => {
-  console.log('👨‍⚕️ Profissional selecionado:', profissional)
+
   emit('selecionar', profissional)
   handleClose()
 }
 
 // Log de desenvolvimento
-console.log('📋 ModalSelecionarProfissional carregado')
+
 </script>
 
 <style scoped>

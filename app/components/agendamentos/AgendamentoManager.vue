@@ -178,7 +178,7 @@ const profissionalAtual = computed(() => {
     )
     
     if (profissionalSelecionado) {
-      console.log('👨‍⚕️ Profissional selecionado manualmente:', profissionalSelecionado)
+
       return profissionalSelecionado
     }
   }
@@ -190,13 +190,13 @@ const profissionalAtual = computed(() => {
     )
     
     if (profissionalLogado) {
-      console.log('👨‍⚕️ Profissional logado encontrado:', profissionalLogado)
+
       return profissionalLogado
     }
   }
   
   // Se não encontrou o profissional logado, retorna o primeiro da lista
-  console.log('👨‍⚕️ Usando primeiro profissional da lista:', profissionais.value[0])
+
   return profissionais.value[0]
 })
 
@@ -214,13 +214,11 @@ const carregarAgendamentos = async () => {
 
   try {
     loadingAgendamentos.value = true
-    console.log('🔍 Carregando agendamentos para profissional:', profissionalAtualId.value)
-    console.log('📊 Array ANTES de carregar:', agendamentos.value.length)
-    
+
+
     // Limpar array antes de carregar novos dados
     agendamentos.value = []
-    console.log('🗑️ Array limpo')
-    
+
     // Obter início e fim da semana atual do store
     const diasSemana = agendamentoStore.diasSemana
     if (!diasSemana || diasSemana.length === 0) {
@@ -231,17 +229,12 @@ const carregarAgendamentos = async () => {
     const inicioSemana = diasSemana[0] // Domingo
     const fimSemana = diasSemana[6] // Sábado
     
-    console.log('📅 Semana atual:', inicioSemana.toLocaleDateString('pt-BR'), 'até', fimSemana.toLocaleDateString('pt-BR'))
-    
     const dados = await buscarAgendamentosPorProfissionalESemana(
       profissionalAtualId.value,
       inicioSemana,
       fimSemana
     )
-    
-    console.log('📦 Dados recebidos da API:', dados.length)
-    console.log('📋 IDs recebidos:', dados.map(a => a.id))
-    
+
     // Ordenar agendamentos do mais atual para o mais antigo
     // Combina data e hora_inicio para ordenação precisa
     const dadosOrdenados = dados.sort((a, b) => {
@@ -251,9 +244,7 @@ const carregarAgendamentos = async () => {
     })
     
     agendamentos.value = dadosOrdenados
-    
-    console.log('✅ Agendamentos carregados e ordenados:', dadosOrdenados.length)
-    console.log('📋 IDs finais no array:', agendamentos.value.map(a => a.id))
+
   } catch (error) {
     console.error('❌ Erro ao carregar agendamentos:', error)
     agendamentos.value = []
@@ -266,14 +257,12 @@ const carregarAgendamentos = async () => {
 const carregarProfissionais = async () => {
   try {
     loading.value = true
-    console.log('🔍 Buscando profissionais...')
-    console.log('👤 Usuário logado - Profile ID:', userStore.profile?.id)
-    
+
+
     const dados = await buscarProfissionais()
     profissionais.value = dados
-    
-    console.log('📋 Profissionais carregados:', dados.length)
-    console.log('🎯 Profissional atual selecionado:', profissionalAtual.value)
+
+
   } catch (error) {
     console.error('❌ Erro ao carregar profissionais:', error)
   } finally {
@@ -284,12 +273,10 @@ const carregarProfissionais = async () => {
 // Função para carregar clientes
 const carregarClientes = async () => {
   try {
-    console.log('🔍 Buscando clientes...')
-    
+
     const dados = await buscarClientes()
     clientes.value = dados
-    
-    console.log('📋 Clientes carregados:', dados.length)
+
   } catch (error) {
     console.error('❌ Erro ao carregar clientes:', error)
   }
@@ -297,16 +284,11 @@ const carregarClientes = async () => {
 
 // Função para criar novo agendamento
 const criarNovoAgendamento = async () => {
-  console.log('🆕 Tentando abrir modal para novo agendamento')
-  
+
   // Verificar autenticação antes de abrir o modal
   const user = useSupabaseUser()
   const userStore = useUserStore()
-  
-  console.log('👤 Verificando autenticação...')
-  console.log('👤 useSupabaseUser():', user.value)
-  console.log('👤 userStore.isAuthenticated:', userStore.isAuthenticated)
-  
+
   const isAuthenticated = user.value?.id || userStore.isAuthenticated
   
   if (!isAuthenticated) {
@@ -323,8 +305,7 @@ const criarNovoAgendamento = async () => {
     
     return
   }
-  
-  console.log('✅ Usuário autenticado. Abrindo modal...')
+
   modalNovoAgendamentoAberto.value = true
 }
 
@@ -334,51 +315,44 @@ const fecharModalNovoAgendamento = () => {
 }
 
 const confirmarNovoAgendamento = async (dados: any) => {
-  console.log('✅ Confirmando novo agendamento:', dados)
-  
+
   try {
     // Fechar o modal primeiro
     modalNovoAgendamentoAberto.value = false
-    console.log('🚪 Modal fechado')
-    
+
     // Limpar cache para forçar recarregamento na próxima busca
-    console.log('🗑️ Limpando cache...')
+
     limparCache()
     
     // Recarregar agendamentos para mostrar o novo agendamento imediatamente
-    console.log('🔄 Recarregando agendamentos após criação...')
+
     await carregarAgendamentos()
-    
-    console.log('✅ Lista de agendamentos atualizada!')
-    
+
   } catch (error) {
     console.error('❌ Erro ao recarregar agendamentos:', error)
   }
 }
 
 const cancelarNovoAgendamento = () => {
-  console.log('❌ Cancelando novo agendamento')
+
   modalNovoAgendamentoAberto.value = false
 }
 
 // Função para recarregar agendamentos (alias para carregarAgendamentos)
 const recarregarAgendamentos = async () => {
-  console.log('🔄 Recarregando agendamentos...')
-  
+
   // FORÇAR limpeza do cache antes de recarregar
-  console.log('🗑️ Forçando limpeza do cache...')
+
   limparCache()
   
   // Recarregar agendamentos
   await carregarAgendamentos()
-  
-  console.log('✅ Agendamentos recarregados com sucesso!')
+
 }
 
 // Função para abrir modal de edição
 const abrirModalEdicao = async (agendamentoId: number) => {
-  console.log('✏️ Abrindo modal de edição para agendamento ID:', agendamentoId)
-  
+
   // Buscar o agendamento completo
   const agendamento = agendamentos.value.find(ag => ag.id === agendamentoId)
   
@@ -386,15 +360,14 @@ const abrirModalEdicao = async (agendamentoId: number) => {
     console.error('❌ Agendamento não encontrado:', agendamentoId)
     return
   }
-  
-  console.log('📝 Agendamento encontrado para edição:', agendamento)
+
   agendamentoParaEdicao.value = agendamento
   modalEdicaoAberto.value = true
 }
 
 // Função para fechar modal de edição
 const fecharModalEdicao = () => {
-  console.log('❌ Fechando modal de edição')
+
   modalEdicaoAberto.value = false
   agendamentoParaEdicao.value = null
 }
@@ -407,17 +380,14 @@ const confirmarEdicaoAgendamento = async (dadosAgendamento: any) => {
   }
 
   try {
-    console.log('💾 Salvando alterações do agendamento:', dadosAgendamento)
-    
+
     // Atualizar apenas os campos editáveis (título, descrição, cor)
     await atualizarAgendamento(agendamentoParaEdicao.value.id, {
       titulo: dadosAgendamento.titulo,
       descricao: dadosAgendamento.descricao,
       cor: dadosAgendamento.cor
     })
-    
-    console.log('✅ Agendamento atualizado com sucesso!')
-    
+
     // Atualizar o agendamento localmente no array para refletir as mudanças imediatamente
     const index = agendamentos.value.findIndex(a => a.id === agendamentoParaEdicao.value?.id)
     if (index !== -1) {
@@ -427,7 +397,7 @@ const confirmarEdicaoAgendamento = async (dadosAgendamento: any) => {
         descricao: dadosAgendamento.descricao,
         cor: dadosAgendamento.cor
       }
-      console.log('🔄 Agendamento atualizado localmente no array')
+
     }
     
   } catch (error) {
@@ -441,7 +411,7 @@ const confirmarEdicaoAgendamento = async (dadosAgendamento: any) => {
 
 // Função para abrir modal de confirmação de cancelamento
 const abrirModalConfirmacaoCancelamento = (agendamentoId: number) => {
-  console.log('🔔 Abrindo modal de confirmação para cancelar agendamento ID:', agendamentoId)
+
   agendamentoParaCancelar.value = agendamentoId
   modalConfirmacaoCancelamentoAberto.value = true
 }
@@ -459,12 +429,9 @@ const confirmarCancelamentoAgendamento = async () => {
   
   try {
     loadingCancelamento.value = true
-    console.log('🗑️ Cancelando agendamento ID:', agendamentoParaCancelar.value)
-    
+
     await cancelarAgendamento(agendamentoParaCancelar.value)
-    
-    console.log('✅ Agendamento cancelado com sucesso!')
-    
+
     // Fechar modais
     fecharModalConfirmacaoCancelamento()
     fecharModalEdicao()
@@ -481,19 +448,19 @@ const confirmarCancelamentoAgendamento = async () => {
 
 // Função para abrir modal de seleção de profissional
 const abrirModalSelecionarProfissional = () => {
-  console.log('👨‍⚕️ Abrindo modal de seleção de profissional')
+
   modalSelecionarProfissionalAberto.value = true
 }
 
 // Função para fechar modal de seleção de profissional
 const fecharModalSelecionarProfissional = () => {
-  console.log('❌ Fechando modal de seleção de profissional')
+
   modalSelecionarProfissionalAberto.value = false
 }
 
 // Função para lidar com seleção de profissional
 const handleSelecionarProfissional = (profissional: AgProfissional) => {
-  console.log('✅ Profissional selecionado:', profissional)
+
   profissionalSelecionadoId.value = profissional.profissional_id
   
   // Limpar cache e recarregar agendamentos do novo profissional
@@ -503,7 +470,7 @@ const handleSelecionarProfissional = (profissional: AgProfissional) => {
 
 // Função para lidar com profissionais carregados
 const handleProfissionaisCarregados = (dados: AgProfissional[]) => {
-  console.log('📋 Profissionais carregados no AgendamentoManager:', dados.length)
+
   profissionais.value = dados
 }
 
@@ -520,12 +487,12 @@ watch(profissionalAtualId, () => {
 
 // Watcher para recarregar agendamentos quando a semana mudar
 watch(() => agendamentoStore.diasSemana, () => {
-  console.log('📅 Semana alterada, recarregando agendamentos...')
+
   carregarAgendamentos()
 }, { deep: true })
 
 // Log de desenvolvimento
-console.log('📋 AgendamentoManager carregado')
+
 </script>
 
 <style scoped>

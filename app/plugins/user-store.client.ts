@@ -3,6 +3,4 @@ export default defineNuxtPlugin(async () => {
   
   // Inicializa o store de usuário
   await userStore.initialize()
-  
-  console.log('🔐 Store de usuário inicializado!')
 })

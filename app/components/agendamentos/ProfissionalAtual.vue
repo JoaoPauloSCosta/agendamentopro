@@ -80,7 +80,7 @@ const profissionalAtual = computed(() => {
     )
     
     if (profissionalSelecionado) {
-      console.log('👨‍⚕️ Profissional selecionado via prop:', profissionalSelecionado)
+
       return profissionalSelecionado
     }
   }
@@ -92,13 +92,13 @@ const profissionalAtual = computed(() => {
     )
     
     if (profissionalLogado) {
-      console.log('👨‍⚕️ Profissional logado encontrado:', profissionalLogado)
+
       return profissionalLogado
     }
   }
   
   // Se não encontrou o profissional logado, retorna o primeiro da lista
-  console.log('👨‍⚕️ Usando primeiro profissional da lista:', profissionais.value[0])
+
   return profissionais.value[0]
 })
 
@@ -106,15 +106,12 @@ const profissionalAtual = computed(() => {
 const carregarProfissionais = async () => {
   try {
     loading.value = true
-    console.log('🔍 Buscando profissionais...')
-    console.log('👤 Usuário logado - Profile ID:', userStore.profile?.id)
-    
+
+
     const dados = await buscarProfissionais()
     profissionais.value = dados
-    
-    console.log('📋 Profissionais carregados:', dados.length)
-    console.log('🎯 Profissional atual selecionado:', profissionalAtual.value)
-    
+
+
     // Emitir evento com os profissionais carregados
     emit('profissionais-carregados', dados)
   } catch (error) {
@@ -127,7 +124,7 @@ const carregarProfissionais = async () => {
 // Função para lidar com clique
 const handleClick = () => {
   if (!loading.value && !props.desabilitarClick) {
-    console.log('🖱️ Clique no profissional atual')
+
     emit('click')
   }
 }
@@ -138,7 +135,7 @@ onMounted(() => {
 })
 
 // Log de desenvolvimento
-console.log('👨‍⚕️ ProfissionalAtual carregado')
+
 </script>
 
 <style scoped>

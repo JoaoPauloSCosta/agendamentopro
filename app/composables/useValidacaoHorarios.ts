@@ -27,16 +27,14 @@ export const useValidacaoHorarios = (agendamentosExistentes: AgendamentoExistent
     
     // Verificar se agendamentosExistentes existe e é um array
     if (!agendamentosExistentes || !Array.isArray(agendamentosExistentes)) {
-      console.log('⚠️ agendamentosExistentes não é um array válido:', agendamentosExistentes)
+
       return []
     }
     
     const slotsOcupados: string[] = []
     const todosHorarios = gerarTodosHorarios()
-    
-    console.log('🔍 Verificando agendamentos para data:', data)
-    console.log('📋 Total de agendamentos existentes:', agendamentosExistentes.length)
-    
+
+
     // Para cada agendamento do dia, marcar todos os slots ocupados
     agendamentosExistentes
       .filter(agendamento => {
@@ -44,39 +42,34 @@ export const useValidacaoHorarios = (agendamentosExistentes: AgendamentoExistent
         
         // Converter a data do agendamento para formato YYYY-MM-DD
         const dataAgendamento = agendamento.data
-        console.log('📅 Comparando:', dataAgendamento, 'com', data)
-        
+
         return dataAgendamento === data
       })
       .forEach(agendamento => {
-        console.log('🎯 Processando agendamento:', agendamento)
-        
+
         const inicio = agendamento.hora_inicio
         const fim = agendamento.hora_fim
         
         if (!inicio || !fim) {
-          console.log('⚠️ Agendamento sem horário válido:', agendamento)
+
           return
         }
         
         // Extrair apenas a parte do horário (HH:MM) se vier com timezone
         const inicioLimpo = inicio.includes('T') ? inicio.split('T')[1].substring(0, 5) : inicio.substring(0, 5)
         const fimLimpo = fim.includes('T') ? fim.split('T')[1].substring(0, 5) : fim.substring(0, 5)
-        
-        console.log('⏰ Horários processados - Início:', inicioLimpo, 'Fim:', fimLimpo)
-        
+
         // Encontrar todos os slots entre início e fim (inclusive início, exclusive fim)
         todosHorarios.forEach(slot => {
           if (slot >= inicioLimpo && slot < fimLimpo) {
             if (!slotsOcupados.includes(slot)) {
               slotsOcupados.push(slot)
-              console.log('🚫 Slot ocupado adicionado:', slot)
+
             }
           }
         })
       })
-    
-    console.log('🕒 Slots ocupados finais para', data, ':', slotsOcupados)
+
     return slotsOcupados
   }
 

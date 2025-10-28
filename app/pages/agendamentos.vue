@@ -139,21 +139,14 @@ const filtrosAtivos = computed<AgRelatorioFiltros>(() => {
 const carregarProfissionais = async () => {
   try {
     carregandoProfissionais.value = true
-    console.log('🔍 Carregando profissionais em segundo plano...')
-    
+
     const dados = await buscarProfissionais()
     profissionais.value = dados
-    
-    console.log('✅ Profissionais carregados:', dados.length)
-    console.log('📋 Dados dos profissionais:', dados)
-    
+
+
     // Log detalhado de cada profissional
     dados.forEach((prof, index) => {
-      console.log(`Profissional ${index + 1}:`, {
-        id: prof.profissional_id,
-        nome: prof.nome_profissional,
-        especialidade: prof.especialidade_nome
-      })
+
     })
   } catch (error) {
     console.error('❌ Erro ao carregar profissionais:', error)
@@ -165,7 +158,7 @@ const carregarProfissionais = async () => {
 
 // Handler para quando um cliente é selecionado
 const handleClienteSelecionado = (cliente: AgCliente | null) => {
-  console.log('👤 Cliente selecionado:', cliente)
+
 }
 
 // Função para limpar todos os filtros
@@ -179,23 +172,17 @@ const limparFiltros = () => {
   clienteSelecionadoId.value = ''
   profissionalSelecionadoId.value = ''
   ocultarCancelados.value = false
-  
-  console.log('🧹 Filtros limpos')
+
 }
 
 // Watcher para log de debug dos filtros
 watch(filtrosAtivos, (novosFiltros) => {
-  console.log('🔄 Filtros alterados na página')
-  console.log('📋 Filtros ativos:', novosFiltros)
-  
+
+
   // Log do profissional selecionado
   if (novosFiltros.profissionalId) {
     const profSelecionado = profissionais.value.find(p => p.profissional_id === novosFiltros.profissionalId)
-    console.log('👨‍⚕️ Profissional selecionado:', {
-      id: profSelecionado?.profissional_id,
-      nome: profSelecionado?.nome_profissional,
-      profile_id: profSelecionado?.profile_id
-    })
+
   }
 }, { deep: true })
 
@@ -206,7 +193,7 @@ onMounted(() => {
 })
 
 // Log de desenvolvimento
-console.log('📅 Página de Agendamentos carregada')
+
 </script>
 
 <style scoped>

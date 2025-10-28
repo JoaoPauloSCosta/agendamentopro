@@ -207,7 +207,7 @@ const fecharModal = () => {
 
 const salvarProfissional = async (dadosProfissional: any) => {
   try {
-    console.log('Dados do profissional para salvar:', dadosProfissional)
+
     // TODO: Implementar lógica de salvamento
     // Por enquanto apenas recarrega os dados
     await carregarProfissionais()

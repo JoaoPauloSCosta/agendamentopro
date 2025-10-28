@@ -14,14 +14,32 @@
     <form @submit.prevent="handleSubmit" class="space-y-6">
       <!-- Campo Email -->
       <div>
-        <BaseInput v-model="formData.email" type="email" label="Email" placeholder="Digite seu email" :required="true"
-          autocomplete="email" size="lg" :icon-left="EnvelopeIcon" />
+        <BaseInput 
+          id="login-email"
+          v-model="formData.email" 
+          type="email" 
+          label="Email" 
+          placeholder="Digite seu email" 
+          :required="true"
+          autocomplete="email" 
+          size="lg" 
+          :icon-left="EnvelopeIcon" 
+        />
       </div>
 
       <!-- Campo Senha -->
       <div>
-        <BaseInput v-model="formData.password" type="password" label="Senha" placeholder="Digite sua senha"
-          :required="true" autocomplete="current-password" size="lg" :icon-left="LockClosedIcon" />
+        <BaseInput 
+          id="login-password"
+          v-model="formData.password" 
+          type="password" 
+          label="Senha" 
+          placeholder="Digite sua senha"
+          :required="true" 
+          autocomplete="current-password" 
+          size="lg" 
+          :icon-left="LockClosedIcon" 
+        />
       </div>
 
       <!-- Link Esqueci a Senha -->
@@ -40,15 +58,6 @@
       </div>
     </form>
 
-    <!-- Link Criar Conta -->
-    <div class="mt-8 text-center">
-      <p class="text-neutral-600">
-        Não tem uma conta?
-        <a href="#" class="text-primary-600 hover:text-primary-700 font-medium transition-colors duration-200">
-          Criar conta
-        </a>
-      </p>
-    </div>
   </div>
 </template>
 

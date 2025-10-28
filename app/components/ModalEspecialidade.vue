@@ -163,13 +163,10 @@ const handleConfirm = async () => {
   try {
     if (props.isEdicao && props.especialidadeId) {
       // Editar especialidade existente
-      console.log('Tentando editar especialidade:', { id: props.especialidadeId, nome: form.value.nome.trim() })
       const response = await editarEspecialidade(props.especialidadeId, form.value.nome.trim())
-      console.log('Resposta do backend (edição):', response)
-      
       // Verificação mais robusta para Nuxt 4
       if (response && typeof response === 'object' && response.success === true) {
-        console.log('Sucesso na edição - mostrando toast')
+
         const message = String(response.message || 'Especialidade editada com sucesso!')
         
         // Usar toast diretamente como na página de teste
@@ -181,7 +178,7 @@ const handleConfirm = async () => {
         emit('save', { id: props.especialidadeId, nome: form.value.nome.trim() })
         emit('close')
       } else {
-        console.log('Erro na edição - mostrando toast de erro')
+
         const errorMessage = String(response?.message || 'Erro ao editar especialidade')
         
         // Usar toast diretamente como na página de teste
@@ -191,13 +188,11 @@ const handleConfirm = async () => {
       }
     } else {
       // Inserir nova especialidade
-      console.log('Tentando inserir especialidade:', form.value.nome.trim())
       const response = await inserirEspecialidade(form.value.nome.trim())
-      console.log('Resposta do backend:', response)
-      
+
       // Verificação mais robusta para Nuxt 4
       if (response && typeof response === 'object' && response.success === true) {
-        console.log('Sucesso - mostrando toast')
+
         const message = String(response.message || 'Especialidade salva com sucesso!')
         
         // Usar toast diretamente como na página de teste
@@ -209,7 +204,7 @@ const handleConfirm = async () => {
         emit('save', { nome: form.value.nome.trim() })
         emit('close')
       } else {
-        console.log('Erro - mostrando toast de erro')
+
         const errorMessage = String(response?.message || 'Erro ao salvar especialidade')
         
         // Usar toast diretamente como na página de teste
@@ -234,8 +229,7 @@ const loadEspecialidadeData = async () => {
   if (props.isEdicao && props.especialidadeId) {
     // TODO: Implementar carregamento dos dados da especialidade
     // Por enquanto, apenas um placeholder
-    console.log('Carregando dados da especialidade:', props.especialidadeId)
-    
+
     // Exemplo de como seria:
     // const { data } = await supabase
     //   .from('ag_especialidades')

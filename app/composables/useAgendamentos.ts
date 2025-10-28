@@ -68,12 +68,11 @@ export const useAgendamentos = () => {
       // Verificar se existe no cache e se é válido
       const dadosCache = cache.value[chaveCache]
       if (dadosCache && cacheValido(dadosCache.timestamp)) {
-        console.log('📦 Usando dados do cache para:', chaveCache)
+
         agendamentos.value = dadosCache.dados
         return dadosCache.dados
       }
 
-      console.log('🔍 Buscando agendamentos para profissional:', profissionalId)
       console.log('📅 Período:', inicioSemana.toLocaleDateString('pt-BR'), 'até', fimSemana.toLocaleDateString('pt-BR'))
 
       // Converter datas para formato ISO (YYYY-MM-DD) para a query
@@ -105,8 +104,6 @@ export const useAgendamentos = () => {
         throw supabaseError
       }
 
-      console.log('✅ Agendamentos encontrados:', data?.length || 0)
-      
       const resultados = data || []
       
       // Salvar no cache
@@ -139,8 +136,6 @@ export const useAgendamentos = () => {
       loading.value = true
       error.value = null
 
-      console.log('🔍 Buscando agendamentos para profissional:', profissionalId)
-
       const { data, error: supabaseError } = await supabase
         .from('ag_agendamentos')
         .select('*')
@@ -155,8 +150,6 @@ export const useAgendamentos = () => {
         throw supabaseError
       }
 
-      console.log('✅ Agendamentos encontrados:', data?.length || 0)
-      
       // Atualizar estado reativo
       agendamentos.value = data || []
       
@@ -176,11 +169,11 @@ export const useAgendamentos = () => {
    * Limpa o cache (útil para forçar nova busca)
    */
   const limparCache = () => {
-    console.log('🗑️ Limpando cache de agendamentos...')
+
     cache.value = {}
     // Também limpar o estado reativo para forçar nova busca
     agendamentos.value = []
-    console.log('✅ Cache limpo e estado reativo resetado')
+
   }
 
   /**
@@ -203,20 +196,15 @@ export const useAgendamentos = () => {
       loading.value = true
       error.value = null
 
-      console.log('📝 Inserindo novo agendamento:', dadosAgendamento)
-
       // Obter o usuário atual
       const user = useSupabaseUser()
       const userStore = useUserStore()
       
       console.log('👤 useSupabaseUser():', user.value)
-      console.log('👤 userStore.user:', userStore.user)
-      console.log('👤 userStore.isAuthenticated:', userStore.isAuthenticated)
-      
+
+
       // Tentar obter o userId de diferentes fontes
       let userId = user.value?.id || user.value?.sub || userStore.user?.id || userStore.user?.sub
-      
-      console.log('👤 User ID atual:', userId)
 
       if (!userId) {
         const errorMessage = 'Usuário não autenticado. Faça login para continuar.'
@@ -250,11 +238,9 @@ export const useAgendamentos = () => {
       const horaFimComTimezone = dadosAgendamento.horaFim.includes('-') || dadosAgendamento.horaFim.includes('+') 
         ? dadosAgendamento.horaFim 
         : dadosAgendamento.horaFim + '-03:00'
-      
-      console.log('🕐 Data original:', dadosAgendamento.data)
-      console.log('🕐 Data formatada final:', dataFormatada)
-      console.log('🕐 Hora início com timezone:', horaInicioComTimezone)
-      console.log('🕐 Hora fim com timezone:', horaFimComTimezone)
+
+
+
 
       const agendamentoParaInserir: AgAgendamentoInsert = {
         user_id: userId,
@@ -269,8 +255,6 @@ export const useAgendamentos = () => {
         cor: dadosAgendamento.cor
         // id e created_at são preenchidos automaticamente pelo Supabase
       }
-
-      console.log('🔄 Dados formatados para inserção:', agendamentoParaInserir)
 
       const { data, error: supabaseError } = await supabase
         .from('ag_agendamentos')
@@ -291,11 +275,9 @@ export const useAgendamentos = () => {
         throw new Error(errorMessage)
       }
 
-      console.log('✅ Agendamento inserido com sucesso:', data)
-      
       // Limpar cache para forçar nova busca na próxima consulta
       limparCache()
-      console.log('🗑️ Cache limpo após inserção do agendamento')
+
       console.log('🔍 Estado do cache após limpeza:', Object.keys(cache.value))
       
       return data
@@ -324,8 +306,6 @@ export const useAgendamentos = () => {
     try {
       loading.value = true
       error.value = null
-
-      console.log('📝 Atualizando agendamento ID:', agendamentoId, 'com dados:', dadosAtualizacao)
 
       // Obter o usuário atual
       const user = useSupabaseUser()
@@ -391,12 +371,9 @@ export const useAgendamentos = () => {
         throw new Error(errorMessage)
       }
 
-      console.log('✅ Agendamento atualizado com sucesso:', data)
-      
       // Limpar cache para forçar nova busca na próxima consulta
       limparCache()
-      console.log('🗑️ Cache limpo após atualização do agendamento')
-      
+
       return data
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido ao atualizar agendamento'
@@ -418,8 +395,6 @@ export const useAgendamentos = () => {
     try {
       loading.value = true
       error.value = null
-
-      console.log('🗑️ Cancelando agendamento ID:', agendamentoId)
 
       // Obter o usuário atual
       const user = useSupabaseUser()
@@ -459,12 +434,9 @@ export const useAgendamentos = () => {
         throw new Error(errorMessage)
       }
 
-      console.log('✅ Agendamento cancelado com sucesso:', data)
-      
       // Limpar cache para forçar nova busca na próxima consulta
       limparCache()
-      console.log('🗑️ Cache limpo após cancelamento do agendamento')
-      
+
       return data
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido ao cancelar agendamento'
@@ -488,8 +460,6 @@ export const useAgendamentos = () => {
       loading.value = true
       error.value = null
 
-      console.log('📊 Buscando relatório de agendamentos com filtros:', filtros)
-
       // Chamar a função RPC do Supabase
       const { data, error: supabaseError } = await supabase.rpc('fn_agendamentos_completos')
 
@@ -499,8 +469,6 @@ export const useAgendamentos = () => {
         throw supabaseError
       }
 
-      console.log('✅ Relatório de agendamentos encontrado:', data?.length || 0, 'registros')
-      
       let resultados = data || []
 
       // Aplicar filtros no lado do cliente (já que a RPC retorna todos os dados)
@@ -510,7 +478,7 @@ export const useAgendamentos = () => {
           resultados = resultados.filter((ag: AgAgendamentoCompleto) => 
             ag.data && ag.data >= filtros.dataInicio!
           )
-          console.log('📅 Filtro data início aplicado:', filtros.dataInicio)
+
         }
 
         // Filtro por data de fim
@@ -518,28 +486,22 @@ export const useAgendamentos = () => {
           resultados = resultados.filter((ag: AgAgendamentoCompleto) => 
             ag.data && ag.data <= filtros.dataFim!
           )
-          console.log('📅 Filtro data fim aplicado:', filtros.dataFim)
+
         }
 
         // Filtro por profissional
         if (filtros.profissionalId) {
-          console.log('👨‍⚕️ Filtrando por profissional ID:', filtros.profissionalId)
-          console.log('📊 Total de agendamentos antes do filtro:', resultados.length)
-          
+
+
           // Log dos primeiros 3 agendamentos para debug
           resultados.slice(0, 3).forEach((ag: AgAgendamentoCompleto, index: number) => {
-            console.log(`Agendamento ${index + 1}:`, {
-              id: ag.id,
-              profissional_id: ag.profissional_id,
-              profissional_nome: ag.profissional_nome,
-              cliente_nome: ag.cliente_nome
-            })
+
           })
           
           resultados = resultados.filter((ag: AgAgendamentoCompleto) => 
             ag.profissional_id === filtros.profissionalId
           )
-          console.log('✅ Filtro profissional aplicado. Resultados:', resultados.length)
+
         }
 
         // Filtro por cliente
@@ -547,7 +509,7 @@ export const useAgendamentos = () => {
           resultados = resultados.filter((ag: AgAgendamentoCompleto) => 
             ag.cliente_id === filtros.clienteId
           )
-          console.log('👤 Filtro cliente ID aplicado:', filtros.clienteId)
+
         }
 
         // Filtro por especialidade
@@ -555,20 +517,20 @@ export const useAgendamentos = () => {
           resultados = resultados.filter((ag: AgAgendamentoCompleto) => 
             ag.profissional_especialidade_id === filtros.especialidadeId
           )
-          console.log('🏥 Filtro especialidade ID aplicado:', filtros.especialidadeId)
+
         }
 
         // Filtro para incluir ou não cancelados (padrão: não incluir)
         if (!filtros.incluirCancelados) {
           resultados = resultados.filter((ag: AgAgendamentoCompleto) => !ag.cancelado)
-          console.log('🚫 Excluindo agendamentos cancelados')
+
         } else {
-          console.log('✅ Incluindo agendamentos cancelados')
+
         }
       } else {
         // Se não há filtros, por padrão não incluir cancelados
         resultados = resultados.filter((ag: AgAgendamentoCompleto) => !ag.cancelado)
-        console.log('🚫 Sem filtros - excluindo agendamentos cancelados por padrão')
+
       }
 
       // Ordenar por data e hora (do mais atual para o mais antigo)
@@ -587,8 +549,6 @@ export const useAgendamentos = () => {
         return 0
       })
 
-      console.log('✅ Filtros aplicados. Total de registros:', resultados.length)
-      
       return resultados
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido ao buscar relatório de agendamentos'

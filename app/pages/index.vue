@@ -17,10 +17,5 @@ import AgendamentoManager from '~/components/agendamentos/AgendamentoManager.vue
 // Inicializar o store de agendamento
 const agendamentoStore = useAgendamentoStore()
 
-// Log de desenvolvimento
 
-console.log('📅 Store de agendamento inicializado:', {
-  dataReferencia: agendamentoStore.formatarData(agendamentoStore.dataReferencia),
-  diasSemana: agendamentoStore.diasSemana.map(dia => agendamentoStore.formatarData(dia))
-})
 </script>

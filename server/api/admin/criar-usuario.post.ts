@@ -46,8 +46,6 @@ export default defineEventHandler(async (event) => {
             }
         }
 
-        console.log('Usuário criado no auth:', authData.user.id)
-
         // 2. Inserir perfil na tabela ag_profiles
         const { data: profileData, error: profileError } = await supabaseAdmin
             .from('ag_profiles')
@@ -72,8 +70,6 @@ export default defineEventHandler(async (event) => {
                 message: 'Erro ao criar perfil do usuário'
             }
         }
-
-        console.log('Perfil criado:', profileData)
 
         return {
             success: true,

@@ -307,7 +307,7 @@ const { inserirAgendamento, loading: loadingAgendamento, error: errorAgendamento
 
 // Criar validação de horários reativa baseada nos agendamentos existentes
 const validacaoHorarios = computed(() => {
-  console.log('🔄 Recriando validacaoHorarios com agendamentos:', props.agendamentosExistentes?.length || 0)
+
   return useValidacaoHorarios(props.agendamentosExistentes || [])
 })
 
@@ -356,40 +356,37 @@ const diasSemana = computed(() => {
 // No modo de criação, usa o profissional da prop (agenda atual)
 const profissionalIdParaExibir = computed(() => {
   if (props.modoEdicao && props.agendamentoParaEdicao?.profissional_id) {
-    console.log('📝 Modo edição - usando profissional do agendamento:', props.agendamentoParaEdicao.profissional_id)
+
     return props.agendamentoParaEdicao.profissional_id
   }
-  
-  console.log('🆕 Modo criação - usando profissional da agenda atual:', props.profissionalId)
+
   return props.profissionalId
 })
 
 // Horários disponíveis usando o composable
 const horasDisponiveis = computed(() => {
-  console.log('⏰ Calculando horas disponíveis para data:', formData.value.data)
-  console.log('📋 Agendamentos existentes para filtro:', props.agendamentosExistentes?.length || 0)
-  
+
+
   if (!validacaoHorarios.value) {
-    console.log('⚠️ validacaoHorarios não disponível')
+
     return []
   }
   
   const horas = validacaoHorarios.value.obterHorasDisponiveis(formData.value.data)
-  console.log('✅ Horas disponíveis calculadas:', horas)
+
   return horas
 })
 
 // Horários fim disponíveis usando o composable
 const horasFimDisponiveis = computed(() => {
-  console.log('⏰ Calculando horas fim disponíveis para:', formData.value.data, formData.value.horaInicio)
-  
+
   if (!validacaoHorarios.value) {
-    console.log('⚠️ validacaoHorarios não disponível')
+
     return []
   }
   
   const horas = validacaoHorarios.value.obterHorasFimDisponiveis(formData.value.data, formData.value.horaInicio)
-  console.log('✅ Horas fim disponíveis calculadas:', horas)
+
   return horas
 })
 
@@ -485,26 +482,23 @@ const validarFormulario = (): boolean => {
 
   // Validar horários usando o composable - APENAS para novos agendamentos
   if (!props.modoEdicao && formData.value.data && formData.value.horaInicio && formData.value.horaFim) {
-    console.log('🔍 Validando horário com validacaoHorarios:', validacaoHorarios.value)
-    
+
     if (validacaoHorarios.value) {
       const resultadoValidacao = validacaoHorarios.value.validarHorario(
         formData.value.data,
         formData.value.horaInicio,
         formData.value.horaFim
       )
-      
-      console.log('📋 Resultado da validação de horário:', resultadoValidacao)
-      
+
       if (!resultadoValidacao.valido) {
         erros.value.horaInicio = resultadoValidacao.erro || 'Horário inválido'
         valido = false
       }
     } else {
-      console.log('⚠️ validacaoHorarios não disponível para validação')
+
     }
   } else if (props.modoEdicao) {
-    console.log('✅ Modo edição: pulando validação de conflitos de horário')
+
   }
 
   return valido
@@ -512,11 +506,10 @@ const validarFormulario = (): boolean => {
 
 // Handlers do modal
 const handleConfirm = async () => {
-  console.log('🚀 Iniciando handleConfirm...')
-  console.log('📝 Modo:', props.modoEdicao ? 'EDIÇÃO' : 'CRIAÇÃO')
-  
+
+
   if (!validarFormulario()) {
-    console.log('❌ Formulário inválido:', erros.value)
+
     return
   }
 
@@ -526,16 +519,13 @@ const handleConfirm = async () => {
     
     // MODO EDIÇÃO - apenas emitir os dados editáveis
     if (props.modoEdicao) {
-      console.log('✏️ Modo edição - emitindo apenas campos editáveis')
-      
+
       const dadosEdicao = {
         titulo: formData.value.titulo,
         descricao: formData.value.descricao,
         cor: formData.value.cor
       }
-      
-      console.log('📦 Dados de edição:', dadosEdicao)
-      
+
       // Mostrar toast de sucesso
       toast.success('Agendamento editado com sucesso!', {
         timeout: 3000
@@ -554,8 +544,7 @@ const handleConfirm = async () => {
     }
     
     // MODO CRIAÇÃO - inserir novo agendamento
-    console.log('🆕 Modo criação - inserindo novo agendamento')
-    
+
     // Validar dados antes de enviar
     if (!props.profissionalId) {
       throw new Error('ID do profissional não encontrado')
@@ -576,17 +565,14 @@ const handleConfirm = async () => {
       cor: formData.value.cor
     }
 
-    console.log('📝 Dados do agendamento:', dadosAgendamento)
-    
     // Inserir agendamento usando o composable
-    console.log('📤 Chamando inserirAgendamento...')
+
     const agendamentoCriado = await inserirAgendamento(dadosAgendamento)
-    
-    console.log('✅ Agendamento criado com sucesso:', agendamentoCriado)
+
     sucesso.value = true
     
     // Mostrar toast de sucesso
-    console.log('🍞 Mostrando toast de sucesso...')
+
     toast.success('Agendamento criado com sucesso!', {
       timeout: 3000
     })
@@ -595,15 +581,13 @@ const handleConfirm = async () => {
     await new Promise(resolve => setTimeout(resolve, 100))
     
     // Emitir evento de confirmação com os dados do agendamento criado
-    console.log('📡 Emitindo evento confirm...')
+
     emit('confirm', agendamentoCriado)
     
     // Resetar formulário após sucesso
-    console.log('🔄 Resetando formulário...')
+
     resetForm()
-    
-    console.log('✅ handleConfirm finalizado com sucesso!')
-    
+
   } catch (error) {
     console.error('❌ Erro detalhado:', {
       error,
@@ -626,7 +610,6 @@ const handleConfirm = async () => {
     }
   } finally {
     loading.value = false
-    console.log('🏁 handleConfirm finalizado (finally)')
   }
 }
 
@@ -641,7 +624,7 @@ const handleCancel = () => {
 // Função para cancelar agendamento
 const handleCancelarAgendamento = () => {
   if (props.agendamentoParaEdicao?.id) {
-    console.log('🗑️ Cancelando agendamento ID:', props.agendamentoParaEdicao.id)
+
     emit('cancelar-agendamento', props.agendamentoParaEdicao.id)
   }
 }
@@ -682,8 +665,7 @@ watch(() => props.isOpen, (novoValor) => {
 // Função para carregar dados no modo de edição
 const carregarDadosEdicao = async () => {
   if (props.agendamentoParaEdicao) {
-    console.log('📝 Carregando dados para edição:', props.agendamentoParaEdicao)
-    
+
     // Carregar dados do formulário
     formData.value = {
       clienteId: props.agendamentoParaEdicao.cliente_id || '',
@@ -701,19 +683,19 @@ const carregarDadosEdicao = async () => {
       
       // Se não temos os dados do cliente via JOIN, buscar manualmente
       if (!clienteEncontrado && props.agendamentoParaEdicao.cliente_id) {
-        console.log('🔍 Cliente não encontrado via JOIN, buscando manualmente...')
+
         try {
           const { buscarClientes } = useProfissionais()
           const todosClientes = await buscarClientes()
           clienteEncontrado = todosClientes.find(c => c.id === props.agendamentoParaEdicao.cliente_id)
-          console.log('👤 Cliente encontrado manualmente:', clienteEncontrado)
+
         } catch (error) {
           console.error('❌ Erro ao buscar cliente:', error)
         }
       }
       
       if (clienteEncontrado) {
-        console.log('👤 Definindo cliente no seletor:', clienteEncontrado)
+
         seletorClienteRef.value.definirCliente(clienteEncontrado)
       } else {
         console.warn('⚠️ Cliente não encontrado para ID:', props.agendamentoParaEdicao.cliente_id)
@@ -724,6 +706,6 @@ const carregarDadosEdicao = async () => {
 
 // Lifecycle
 onMounted(() => {
-  console.log('🚀 ModalNovoAgendamento montado')
+
 })
 </script>

@@ -364,7 +364,7 @@ const handleConfirm = async () => {
   try {
     if (props.isEdicao && props.clienteId) {
       // Editar cliente existente
-      console.log('Tentando editar cliente:', props.clienteId, form.value)
+
       const response = await editarCliente(Number(props.clienteId), {
         nome: form.value.nome.trim(),
         cpf: form.value.cpf.replace(/\D/g, ''), // Remove máscara do CPF
@@ -373,10 +373,8 @@ const handleConfirm = async () => {
         endereco: form.value.endereco?.trim() || null
       })
       
-      console.log('Resposta do backend (edição):', response)
-      
       if (response && typeof response === 'object' && response.success === true) {
-        console.log('Sucesso na edição - mostrando toast')
+
         const message = String(response.message || 'Cliente editado com sucesso!')
         
         toast.success(message, {
@@ -387,7 +385,7 @@ const handleConfirm = async () => {
         emit('save', form.value)
         emit('close')
       } else {
-        console.log('Erro na edição - mostrando toast de erro')
+
         const errorMessage = String(response?.message || 'Erro ao editar cliente')
         
         toast.error(errorMessage, {
@@ -396,7 +394,7 @@ const handleConfirm = async () => {
       }
     } else {
       // Inserir novo cliente
-      console.log('Tentando inserir cliente:', form.value)
+
       const response = await inserirCliente({
         nome: form.value.nome.trim(),
         cpf: form.value.cpf.replace(/\D/g, ''), // Remove máscara do CPF
@@ -404,11 +402,9 @@ const handleConfirm = async () => {
         telefone: form.value.telefone?.replace(/\D/g, '') || null, // Remove máscara do telefone
         endereco: form.value.endereco?.trim() || null
       })
-      
-      console.log('Resposta do backend:', response)
-      
+
       if (response && typeof response === 'object' && response.success === true) {
-        console.log('Sucesso - mostrando toast')
+
         const message = String(response.message || 'Cliente salvo com sucesso!')
         
         toast.success(message, {
@@ -419,7 +415,7 @@ const handleConfirm = async () => {
         emit('save', form.value)
         emit('close')
       } else {
-        console.log('Erro - mostrando toast de erro')
+
         const errorMessage = String(response?.message || 'Erro ao salvar cliente')
         
         toast.error(errorMessage, {

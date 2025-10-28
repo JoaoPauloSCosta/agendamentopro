@@ -62,15 +62,13 @@ export const useUserStore = defineStore('user', {
     async fetchProfile() {
       if (!this.user?.sub) {
         this.error = 'Usuário não autenticado ou ID inválido'
-        console.log('fetchProfile: user ou user.sub não disponível:', this.user)
+
         return
       }
 
       try {
         this.loading = true
         this.error = null
-
-        console.log('fetchProfile: Buscando perfil para user_id:', this.user.sub)
 
         const supabase = useSupabaseClient()
         
@@ -83,14 +81,14 @@ export const useUserStore = defineStore('user', {
         if (error) {
           // Se não encontrar o perfil, não é necessariamente um erro
           if (error.code === 'PGRST116') {
-            console.log('Perfil não encontrado para o usuário:', this.user.sub)
+
             this.profile = null
           } else {
             console.error('Erro na query do perfil:', error)
             throw error
           }
         } else {
-          console.log('Perfil encontrado:', data)
+
           this.profile = data
         }
       } catch (err) {
@@ -183,24 +181,22 @@ export const useUserStore = defineStore('user', {
       const supabase = useSupabaseClient()
       const user = useSupabaseUser()
 
-      console.log('initialize: Iniciando store do usuário')
-      console.log('initialize: user inicial:', user.value)
 
       // Define o usuário inicial
       this.setUser(user.value)
 
       // Se há usuário, busca o perfil
       if (user.value) {
-        console.log('initialize: Usuário encontrado, buscando perfil...')
+
         await this.fetchProfile()
       }
 
       // Observa mudanças no usuário
       watch(user, async (newUser) => {
-        console.log('initialize: Mudança no usuário detectada:', newUser)
+
         this.setUser(newUser)
         if (newUser) {
-          console.log('initialize: Novo usuário, buscando perfil...')
+
           await this.fetchProfile()
         }
       })

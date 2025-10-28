@@ -200,18 +200,12 @@ const emit = defineEmits<Emits>()
 const inputRef = ref<HTMLInputElement>()
 const showPassword = ref(false)
 
-// ID único para o input (usando contador para evitar problemas de hidratação)
-let idCounter = 0
+// ID único para o input (usando useId do Vue para evitar problemas de hidratação)
 const inputId = computed(() => {
   if (props.id) return props.id
   
-  // Durante a hidratação, usar um ID baseado em contador para consistência
-  if (process.client) {
-    return `input-${++idCounter}`
-  }
-  
-  // No servidor, usar um ID simples
-  return 'input-ssr'
+  // Usar useId() do Nuxt para gerar IDs consistentes entre servidor e cliente
+  return useId()
 })
 
 // Tipo do input (para password toggle)

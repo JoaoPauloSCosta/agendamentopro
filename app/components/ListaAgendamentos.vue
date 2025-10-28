@@ -99,14 +99,10 @@ const carregarAgendamentos = async () => {
     
     // Limpar agendamentos antes de carregar novos
     agendamentos.value = []
-    
-    console.log('📊 Carregando agendamentos com filtros:', props.filtros)
-    
+
     const dados = await buscarRelatorioAgendamentos(props.filtros)
     agendamentos.value = dados
-    
-    console.log('✅ Agendamentos carregados:', dados.length)
-    console.log('📋 IDs dos agendamentos:', dados.map(a => a.id))
+
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Erro ao carregar agendamentos'
     console.error('❌ Erro ao carregar agendamentos:', err)
@@ -124,8 +120,7 @@ onMounted(() => {
 // Usando watchEffect com debounce para evitar múltiplas chamadas
 let timeoutId: NodeJS.Timeout | null = null
 watch(() => props.filtros, () => {
-  console.log('🔄 Filtros alterados no ListaAgendamentos')
-  
+
   // Limpar timeout anterior
   if (timeoutId) {
     clearTimeout(timeoutId)
@@ -133,7 +128,7 @@ watch(() => props.filtros, () => {
   
   // Aguardar 300ms antes de recarregar (debounce)
   timeoutId = setTimeout(() => {
-    console.log('⏱️ Debounce concluído, recarregando agendamentos...')
+
     carregarAgendamentos()
   }, 300)
 }, { deep: true })
@@ -144,7 +139,7 @@ defineExpose({
 })
 
 // Log de desenvolvimento
-console.log('📋 ListaAgendamentos carregado')
+
 </script>
 
 <style scoped>

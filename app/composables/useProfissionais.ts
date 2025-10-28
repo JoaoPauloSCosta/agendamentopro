@@ -45,15 +45,12 @@ export const useProfissionais = () => {
   // Inserir especialidade
   const inserirEspecialidade = async (nomeEspecialidade: string): Promise<AgAddEspecialidadeResponse> => {
     try {
-      console.log('Chamando RPC ag_add_especialidade com:', nomeEspecialidade)
 
       const { data, error } = await supabase
         // @ts-ignore - RPC function not in generated types
         .rpc('ag_add_especialidade', {
           p_especialidade: nomeEspecialidade
         })
-
-      console.log('Resposta do Supabase - data:', data, 'error:', error)
 
       // Verificação de erro do Supabase
       if (error) {
@@ -75,7 +72,7 @@ export const useProfissionais = () => {
 
       // Se data é um valor primitivo (boolean, string, number)
       if (typeof data !== 'object') {
-        console.log('Data é um valor primitivo:', data)
+
         // Assumir sucesso se não há erro e há algum retorno
         return {
           success: true,
@@ -84,7 +81,7 @@ export const useProfissionais = () => {
       }
 
       // Se data é um objeto, verificar suas propriedades
-      console.log('Data é um objeto:', data)
+
       const result = data as Record<string, any>
 
       // Verificar se tem propriedade success
@@ -111,7 +108,6 @@ export const useProfissionais = () => {
   // Editar especialidade
   const editarEspecialidade = async (id: number, novoNome: string): Promise<AgAddEspecialidadeResponse> => {
     try {
-      console.log('Chamando RPC ag_update_especialidade com:', { id, novoNome })
 
       const { data, error } = await supabase
         // @ts-ignore - RPC function not in generated types
@@ -119,8 +115,6 @@ export const useProfissionais = () => {
           p_id: id,
           p_nova_especialidade: novoNome
         })
-
-      console.log('Resposta do Supabase - data:', data, 'error:', error)
 
       // Verificação de erro do Supabase
       if (error) {
@@ -142,7 +136,7 @@ export const useProfissionais = () => {
 
       // Se data é um valor primitivo (boolean, string, number)
       if (typeof data !== 'object') {
-        console.log('Data é um valor primitivo:', data)
+
         // Assumir sucesso se não há erro e há algum retorno
         return {
           success: true,
@@ -151,7 +145,7 @@ export const useProfissionais = () => {
       }
 
       // Se data é um objeto, verificar suas propriedades
-      console.log('Data é um objeto:', data)
+
       const result = data as Record<string, any>
 
       // Verificar se tem propriedade success
@@ -178,14 +172,11 @@ export const useProfissionais = () => {
   // Deletar especialidade
   const deletarEspecialidade = async (id: number): Promise<AgAddEspecialidadeResponse> => {
     try {
-      console.log('Deletando especialidade com ID:', id)
 
       const { error } = await supabase
         .from('ag_especialidades')
         .delete()
         .eq('id', id)
-
-      console.log('Resposta do Supabase - error:', error)
 
       // Verificação de erro do Supabase
       if (error) {
@@ -231,7 +222,6 @@ export const useProfissionais = () => {
   // Inserir profissional
   const inserirProfissional = async (profileId: number, especialidadeId: number): Promise<AgAddEspecialidadeResponse> => {
     try {
-      console.log('Inserindo profissional com:', { profileId, especialidadeId })
 
       const { data, error } = await supabase
         .from('ag_profissionais')
@@ -241,8 +231,6 @@ export const useProfissionais = () => {
           especialidade_id: especialidadeId
         })
         .select()
-
-      console.log('Resposta do Supabase - data:', data, 'error:', error)
 
       // Verificação de erro do Supabase
       if (error) {
@@ -269,7 +257,6 @@ export const useProfissionais = () => {
   // Editar profissional
   const editarProfissional = async (profissionalId: number, profileId: number, especialidadeId: number): Promise<AgAddEspecialidadeResponse> => {
     try {
-      console.log('Editando profissional com:', { profissionalId, profileId, especialidadeId })
 
       const { data, error } = await supabase
         .from('ag_profissionais')
@@ -280,8 +267,6 @@ export const useProfissionais = () => {
         })
         .eq('id', profissionalId)
         .select()
-
-      console.log('Resposta do Supabase - data:', data, 'error:', error)
 
       // Verificação de erro do Supabase
       if (error) {
@@ -308,14 +293,11 @@ export const useProfissionais = () => {
   // Deletar profissional
   const deletarProfissional = async (profissionalId: number): Promise<AgAddEspecialidadeResponse> => {
     try {
-      console.log('Deletando profissional com ID:', profissionalId)
 
       const { error } = await supabase
         .from('ag_profissionais')
         .delete()
         .eq('id', profissionalId)
-
-      console.log('Resposta do Supabase - error:', error)
 
       // Verificação de erro do Supabase
       if (error) {
@@ -368,7 +350,6 @@ export const useProfissionais = () => {
     telefone?: string | null
   }): Promise<AgAddEspecialidadeResponse> => {
     try {
-      console.log('Inserindo cliente com:', dadosCliente)
 
       const { data, error } = await supabase
         .from('ag_clientes')
@@ -381,8 +362,6 @@ export const useProfissionais = () => {
           telefone: dadosCliente.telefone || null
         })
         .select()
-
-      console.log('Resposta do Supabase - data:', data, 'error:', error)
 
       // Verificação de erro do Supabase
       if (error) {
@@ -424,7 +403,6 @@ export const useProfissionais = () => {
     telefone?: string | null
   }): Promise<AgAddEspecialidadeResponse> => {
     try {
-      console.log('Editando cliente com ID:', clienteId, 'dados:', dadosCliente)
 
       const { data, error } = await supabase
         .from('ag_clientes')
@@ -438,8 +416,6 @@ export const useProfissionais = () => {
         })
         .eq('id', clienteId)
         .select()
-
-      console.log('Resposta do Supabase - data:', data, 'error:', error)
 
       // Verificação de erro do Supabase
       if (error) {
@@ -475,14 +451,11 @@ export const useProfissionais = () => {
   // Deletar cliente
   const deletarCliente = async (clienteId: number): Promise<AgAddEspecialidadeResponse> => {
     try {
-      console.log('Deletando cliente com ID:', clienteId)
 
       const { error } = await supabase
         .from('ag_clientes')
         .delete()
         .eq('id', clienteId)
-
-      console.log('Resposta do Supabase - error:', error)
 
       // Verificação de erro do Supabase
       if (error) {

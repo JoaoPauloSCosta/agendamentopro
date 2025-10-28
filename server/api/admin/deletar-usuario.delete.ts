@@ -33,8 +33,6 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    console.log('Perfil deletado para user_id:', userId)
-
     // 2. Deletar usuário do auth.users usando admin API
     const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(userId)
 
@@ -45,8 +43,6 @@ export default defineEventHandler(async (event) => {
         message: authError.message || 'Erro ao deletar usuário'
       }
     }
-
-    console.log('Usuário deletado do auth:', userId)
 
     return {
       success: true,

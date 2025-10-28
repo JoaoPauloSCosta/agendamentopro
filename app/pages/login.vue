@@ -24,7 +24,7 @@
         <!-- Footer -->
         <div class="mt-8 text-center text-sm text-neutral-500">
           <p>
-            © 2024 AgendaPro. Todos os direitos reservados.
+            © 2025 AgendaPro. Todos os direitos reservados.
           </p>
         </div>
       </div>

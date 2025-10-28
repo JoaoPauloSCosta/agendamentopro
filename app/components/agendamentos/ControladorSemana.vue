@@ -68,7 +68,7 @@ const voltarSemana = () => {
 }
 
 // Log de desenvolvimento
-console.log('📅 ControladorSemana carregado')
+
 </script>
 
 <style scoped>
