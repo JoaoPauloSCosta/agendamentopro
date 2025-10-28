@@ -1,4 +1,4 @@
-import Toast, { POSITION } from 'vue-toastification'
+import Toast, { POSITION, useToast } from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -25,4 +25,11 @@ export default defineNuxtPlugin((nuxtApp) => {
     maxToasts: 20,
     newestOnTop: true
   })
+
+  // Expor o toast para uso via useNuxtApp().$toast
+  return {
+    provide: {
+      toast: useToast()
+    }
+  }
 })
