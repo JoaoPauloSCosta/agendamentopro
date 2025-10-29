@@ -144,7 +144,7 @@ export const useAuth = () => {
       error.value = null
 
       const config = useRuntimeConfig()
-      const baseUrl = config.public.siteUrl || 'http://localhost:3000'
+      const baseUrl = config.public.siteUrl || 'https://agendamentopro.vercel.app'
 
       const { data, error: authError } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${baseUrl}/recuperar-senha`,
