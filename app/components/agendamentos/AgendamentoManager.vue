@@ -148,7 +148,7 @@ const { buscarAgendamentosPorProfissionalESemana, limparCache, atualizarAgendame
 
 // Estado reativo para profissionais e agendamentos
 const profissionais = ref<AgProfissional[]>([])
-const clientes = ref<AgCliente[]>([])
+const clientes = ref<any[]>([])
 const agendamentos = ref<AgAgendamento[]>([])
 const loading = ref(true)
 const loadingAgendamentos = ref(false)
@@ -226,8 +226,13 @@ const carregarAgendamentos = async () => {
       return
     }
     
-    const inicioSemana = diasSemana[0] // Domingo
-    const fimSemana = diasSemana[6] // Sábado
+    const inicioSemana = diasSemana[0]
+    const fimSemana = diasSemana[6]
+    
+    if (!inicioSemana || !fimSemana) {
+      console.warn('⚠️ Datas da semana inválidas')
+      return
+    }
     
     const dados = await buscarAgendamentosPorProfissionalESemana(
       profissionalAtualId.value,
@@ -390,9 +395,10 @@ const confirmarEdicaoAgendamento = async (dadosAgendamento: any) => {
 
     // Atualizar o agendamento localmente no array para refletir as mudanças imediatamente
     const index = agendamentos.value.findIndex(a => a.id === agendamentoParaEdicao.value?.id)
-    if (index !== -1) {
+    if (index !== -1 && agendamentos.value[index]) {
+      const agendamentoAtual = agendamentos.value[index]
       agendamentos.value[index] = {
-        ...agendamentos.value[index],
+        ...agendamentoAtual,
         titulo: dadosAgendamento.titulo,
         descricao: dadosAgendamento.descricao,
         cor: dadosAgendamento.cor

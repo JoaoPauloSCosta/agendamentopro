@@ -21,7 +21,7 @@ defineOptions({
 
 // Props - recebe a lista de dias
 interface Props {
-  dias: Date[]
+  dias: readonly Date[] | Date[]
 }
 
 const props = defineProps<Props>()

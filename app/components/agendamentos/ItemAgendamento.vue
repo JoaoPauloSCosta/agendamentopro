@@ -35,7 +35,7 @@ defineOptions({
 // Props - recebe uma data e lista de agendamentos
 interface Props {
   data: Date
-  agendamentos: AgAgendamento[]
+  agendamentos: readonly AgAgendamento[] | AgAgendamento[]
 }
 
 const props = defineProps<Props>()
